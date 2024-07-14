@@ -18,22 +18,23 @@ class sphere: public hitable {
 void sphere::update_hit_record(float t, ray r, hit_record& rec) const {
     rec.t = t;
     rec.p = r.point_at_parameter(rec.t);
-    rec.normal = (rec.p - center) / radius;
+    vec3 outward_normal = (rec.p - center) / radius;
+    rec.set_face_normal(r, outward_normal);
 }
 
 bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
-    vec3 oc = r.origin() - center;
-    float a = dot(r.direction(), r.direction());
-    float b = 2.0 * dot(oc, r.direction());
-    float c = dot(oc, oc) - radius*radius;
-    float discriminant = b*b - 4*a*c;
+    vec3 oc = center - r.origin();
+    float a = r.direction().squared_length();
+    float b = dot(r.direction(), oc);
+    float c = oc.squared_length() - radius*radius;
+    float discriminant = b*b - a*c;
     if (discriminant > 0) {
-        float temp = (-b - sqrt(b*b-a*c)/a);
+        float temp = (b - sqrt(discriminant)/a);
         if (temp < t_max && temp > t_min) {
             update_hit_record(temp, r, rec);
             return true;
         }
-        temp = (-b + sqrt(b*b-a*c)/a);
+        temp = (b - sqrt(discriminant)/a);
         if (temp < t_max && temp > t_min) {
             update_hit_record(temp, r, rec);
             return true;

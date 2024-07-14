@@ -1,74 +1,27 @@
+#include "color.h"
+#include "vec3.h"
+
 #include <iostream>
-#include "sphere.h"
-#include "camera.h"
-#include "hitable_list.h"
 #include <fstream>
-using namespace std;
-
-#define drand48() ((double)rand()/RAND_MAX)
-
-vec3 random_in_unit_sphere() {
-    vec3 p;
-    do {
-        p = 2.0*vec3(drand48(), drand48(), drand48()) - vec3(1, 1, 1);
-    } while (dot(p,p) >= 1.0);
-    return p;
-}
-
-vec3 color(const ray &r, hitable *world)
-{
-    hit_record rec;
-    if (world->hit(r, 0.0, 10000, rec))
-    {
-        vec3 target = rec.p + rec.normal + random_in_unit_sphere();
-        return 0.5*color(ray(rec.p, target - rec.p), world);
-    }
-    else
-    {
-        // Create background gradient based on y-coordinate of the ray
-        // Color is determined through a linear interpolation
-        vec3 unit_direction = unit_vector(r.direction());
-        float t = 0.5 * (unit_direction.y() + 1.0);
-        return (1.0 - t) * vec3(1.0, 1.0, 1.0) + t * vec3(0.5, 0.7, 1.0);
-    }
-}
 
 int main()
 {
-    int nx = 600;
-    int ny = 300;
-    int ns = 10;
-    ofstream myfile;
-    myfile.open("out.ppm");
-    myfile << "P3\n"
-           << nx << " " << ny << "\n255\n";
-
-    hitable *list[2];
-    list[0] = new sphere(vec3(0, 0, -1), 0.5);
-    list[1] = new sphere(vec3(0, -100.5, -1), 100);
-    hitable *world = new hitable_list(list, 2);
-    camera cam;
+    int image_width = 256;
+    int image_height = 256;
+    // Set up output file
+    std::ofstream output_file;
+    output_file.open("out.ppm");
+    output_file << "P3\n"
+           << image_width << " " << image_height << "\n255\n";
     
-    for (int j = ny - 1; j >= 0; j--)
+    for (int j = image_height - 1; j >= 0; j--)
     {
-        for (int i = 0; i < nx; i++)
+        std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
+        for (int i = 0; i < image_width; i++)
         {
-            vec3 col(0, 0, 0);
-            for (int s=0; s < ns; s++) {
-                float u = float(i + drand48()) / float(nx);
-                float v = float(j + drand48()) / float(ny);
-                ray r = cam.get_ray(u, v);
-                vec3 p = r.point_at_parameter(2.0);
-                col += color(r, world);
-            }
-            col /= float(ns);
-            col = vec3( sqrt(col[0]), sqrt(col[1]), sqrt(col[2]));
-            int ir = int(255.99 * col[0]);
-            int ig = int(255.99 * col[1]);
-            int ib = int(255.99 * col[2]);
-
-            myfile << ir << " " << ig << " " << ib << "\n";
+            auto pixel_color = color(double(i)/(image_width-1), double(j)/(image_height-1), 0);
+            write_color(output_file, pixel_color);
         }
     }
-    myfile.close();
+    output_file.close();
 }
