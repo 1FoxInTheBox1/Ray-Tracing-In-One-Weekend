@@ -29,6 +29,7 @@ int main()
     {
         for (int b = -11; b < 11; b++)
         {
+            // Generate a bunch of random spheres
             auto choose_mat = random_double();
             point3 center(a + 0.9 * random_double(), 0.2, b + 0.9 * random_double());
 
@@ -76,11 +77,13 @@ int main()
     cam.samples_per_pixel = 500;
     cam.max_depth = 50;
 
+    // Camera Aiming
     cam.vfov = 20;
-    cam.lookfrom = point3(13,2,3);
+    cam.lookfrom = point3(13, 2, 3);
     cam.lookat = point3(0, 0, 0);
     cam.vup = vec3(0, 1, 0);
 
+    // Defocus Blur settings
     cam.defocus_angle = .6;
     cam.focus_dist = 10.0;
 

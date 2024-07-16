@@ -40,6 +40,8 @@ public:
             for (int i = 0; i < image_width; i++)
             {
                 color pixel_color(0, 0, 0);
+                // Get random samples around each pixel and then
+                // average the results to determine the final displayed color
                 for (int sample = 0; sample < samples_per_pixel; sample++)
                 {
                     ray r = get_ray(i, j);
@@ -106,9 +108,15 @@ private:
         // Construct a camera ray originating from the defocus disk and directed at randomly sampled
         // point around the pixel location i, j
 
+        // Get the randomly sampled point
+        // We'll eventually call get_ray a bunch and average all those results
+        // We do this to implement antialiasing
         auto offset = sample_square();
         auto pixel_sample = pixel00_loc + ((i + offset.x()) * pixel_delta_u) + ((j + offset.y()) * pixel_delta_v);
 
+        // Get the random origin point
+        // We do this to simulate a camera lens, which is not a single point but a disk.
+        // The result of this approximation is defocus blur
         auto ray_origin = (defocus_angle <= 0) ? center : defocus_disk_sample();
         auto ray_direction = pixel_sample - ray_origin;
 
@@ -121,8 +129,9 @@ private:
         return vec3(random_double() - 0.5, random_double() - 0.5, 0);
     }
 
-    vec3 defocus_disk_sample() const {
-        //Returns a random point in the camera defocus disk
+    vec3 defocus_disk_sample() const
+    {
+        // Returns a random point in the camera defocus disk
         auto p = random_in_unit_disk();
         return center + (p[0] * defocus_disk_u) + (p[1] * defocus_disk_v);
     }
@@ -140,8 +149,11 @@ private:
         {
             ray scattered;
             color attenuation;
+            // If scatter() returns true then the ray was not absorbed
             if (rec.mat->scatter(r, rec, attenuation, scattered))
+                // We recursively determine the color of the scattered ray to determine the color of this ray
                 return attenuation * ray_color(scattered, depth - 1, world);
+            // An absorbed ray obviously won't produce any color, so we return black
             return color(0, 0, 0);
         }
 
