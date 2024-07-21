@@ -4,6 +4,6 @@ I will likely attempt to modify and extend this project once I have completed th
 
 Some renders from the completed project:
 
-![scene with many spheres](https://github.com/1FoxInTheBox1/Ray-Tracing-In-One-Weekend/blob/main/render2.png?raw=true)
+![scene with many spheres](https://github.com/1FoxInTheBox1/Ray-Tracing-In-One-Weekend/blob/main/images/render2.png?raw=true)
 
-![close up of spheres](https://github.com/1FoxInTheBox1/Ray-Tracing-In-One-Weekend/blob/main/render1.png?raw=true)
+![close up of spheres](https://github.com/1FoxInTheBox1/Ray-Tracing-In-One-Weekend/blob/main/images/render1.png?raw=true)

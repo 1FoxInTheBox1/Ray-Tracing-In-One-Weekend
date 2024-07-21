@@ -4,6 +4,7 @@
 #include "hittable.h"
 #include "hittable_list.h"
 #include "sphere.h"
+#include "texture.h"
 
 int main()
 {
@@ -73,8 +74,8 @@ int main()
     // Camera Setup
     camera cam;
     cam.aspect_ratio = 16.0 / 9.0;
-    cam.image_width = 1200;
-    cam.samples_per_pixel = 500;
+    cam.image_width = 400;
+    cam.samples_per_pixel = 100;
     cam.max_depth = 50;
 
     // Camera Aiming
@@ -87,6 +88,12 @@ int main()
     cam.defocus_angle = .6;
     cam.focus_dist = 10.0;
 
+    texture text = texture("images/test.png");
+    text.get_color_at(0,0);
+    text.get_color_at(1,0);
+    text.get_color_at(0,1);
+    text.get_color_at(1,1);
+
     // Render
-    cam.render(world);
+    // cam.render(world);
 }

@@ -51,6 +51,13 @@ public:
         return true;
     }
 
+    void get_uv_coordinate(const point3 &p, double &u, double &v) {
+        double rho = acos(p.z());
+        double phi = atan2(p.y(), p.x());
+        u = rho / pi;
+        v = phi / (2 * pi);
+    }
+
 private:
     point3 center;
     double radius;

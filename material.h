@@ -112,9 +112,4 @@ private:
     }
 };
 
-// TODO: Load image texture
-// Use spherical projection to turn hit location
-// into u,v coordinate
-// Display that color on the sphere
-
 #endif
