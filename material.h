@@ -2,6 +2,7 @@
 #define MATERIAL_H
 
 #include "hittable.h"
+#include "texture.h"
 #include "rtweekend.h"
 
 class material
@@ -20,7 +21,8 @@ public:
 class lambertian : public material
 {
 public:
-    lambertian(const color &albedo) : albedo(albedo) {}
+    lambertian(const color &albedo) : texture(make_shared<solid_color_texture>(albedo)) {}
+    lambertian(const char *filename) : texture(make_shared<image_texture>(filename)) {}
 
     bool scatter(const ray &r_in, const hit_record &rec, color &attenuation, ray &scattered)
         const override
@@ -37,12 +39,13 @@ public:
         }
 
         scattered = ray(rec.p, scatter_direction);
-        attenuation = albedo;
+        // std::cout << rec.u << " " << rec.v << "\n";
+        attenuation = texture->get_color_at(rec.u, rec.v);
         return true;
     }
 
 private:
-    color albedo;
+    shared_ptr<texture> texture;
 };
 
 // A class representing metallic, reflective materials

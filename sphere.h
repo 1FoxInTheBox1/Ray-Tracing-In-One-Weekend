@@ -11,7 +11,7 @@ public:
 
     bool hit(const ray &r, interval ray_t, hit_record &rec) const override
     {
-        // We can determine if a ray intersects the sphere 
+        // We can determine if a ray intersects the sphere
         // with the quadratic formula. Since b=-2h
         // We can make some simplifications
         vec3 oc = center - r.origin();
@@ -47,15 +47,17 @@ public:
         vec3 outward_normal = (rec.p - center) / radius;
         rec.set_face_normal(r, outward_normal);
         rec.mat = mat;
+        get_uv_coordinate(outward_normal, rec.u, rec.v);
 
         return true;
     }
 
-    void get_uv_coordinate(const point3 &p, double &u, double &v) {
-        double rho = acos(p.z());
-        double phi = atan2(p.y(), p.x());
-        u = rho / pi;
-        v = phi / (2 * pi);
+    void get_uv_coordinate(const point3 &p, double &u, double &v) const
+    {
+        double phi = atan2(-p.z(), p.x()) + pi;
+        double rho = acos(p.y());
+        u = phi / (2 * pi);
+        v = rho / pi;
     }
 
 private:
