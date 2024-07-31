@@ -5,10 +5,12 @@
 #include "hittable_list.h"
 #include "sphere.h"
 #include "texture.h"
+#include "bvh_node.h"
 
 #include <chrono>
 
-void random_spheres(hittable_list &world) {
+void random_spheres(hittable_list &world)
+{
     for (int a = -11; a < 11; a++)
     {
         for (int b = -11; b < 11; b++)
@@ -47,6 +49,17 @@ void random_spheres(hittable_list &world) {
     }
 }
 
+void build_bvh(shared_ptr<bvh_node> root, const hittable_list &world, int max_depth)
+{
+    for (int i = 0; i < world.size(); i++)
+    {
+        auto object = world.get(i);
+        root->add_object(object);
+        root->grow_to_include(object);
+    }
+    split_bvh(root, max_depth);
+}
+
 int main()
 {
     // World Setup
@@ -65,6 +78,17 @@ int main()
 
     auto material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
     world.add(make_shared<sphere>(point3(4, 1, 0), 1.0, material3));
+
+    // // Build BVH
+    std::cout << "Building BVH\n";
+    auto bvh_start = std::chrono::high_resolution_clock::now();
+
+    auto root = make_shared<bvh_node>();
+    build_bvh(root, world, 4);
+
+    auto bvh_stop = std::chrono::high_resolution_clock::now();
+    auto bvh_duration = std::chrono::duration_cast<std::chrono::milliseconds>(bvh_stop - bvh_start);
+    std::cout << "BVH Construction complete in " << bvh_duration.count() << " microseconds\n";
 
     // Camera Setup
     camera cam;
@@ -85,10 +109,16 @@ int main()
 
     // Render
     std::cout << "Beginning Rendering\n";
-    auto start = std::chrono::high_resolution_clock::now();
-    cam.render(world);
-    auto stop = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-    std::cout << "Rendering Complete in " << duration.count() << " microseconds\n Press enter to exit\n";
+    auto render_start = std::chrono::high_resolution_clock::now();
+
+    for (int i = 1; i <= 10; i++)
+    {
+        std::cout << "Rendering Image #" << i << "\n";
+        cam.render(hittable_list(root));
+    }
+
+    auto render_stop = std::chrono::high_resolution_clock::now();
+    auto render_duration = std::chrono::duration_cast<std::chrono::milliseconds>(render_stop - render_start);
+    std::cout << "Rendering complete in " << render_duration.count() << " microseconds\nPress enter to exit\n";
     std::cin.get();
 }

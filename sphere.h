@@ -7,7 +7,7 @@ class sphere : public hittable
 {
 public:
     sphere(const point3 &center, double radius, shared_ptr<material> mat)
-        : center(center), radius(fmax(0, radius)), mat(mat) {}
+        : center(center), radius(fmax(0, radius)), mat(mat), hittable(center) {}
 
     bool hit(const ray &r, interval ray_t, hit_record &rec) const override
     {
@@ -58,6 +58,12 @@ public:
         double rho = acos(p.y());
         u = phi / (2 * pi);
         v = rho / pi;
+    }
+
+    aabb get_bounding_box() {
+        vec3 min = vec3(center.x() - radius, center.y() - radius, center.z() - radius);
+        vec3 max = vec3(center.x() + radius, center.y() + radius, center.z() + radius);
+        return aabb(min, max);
     }
 
 private:

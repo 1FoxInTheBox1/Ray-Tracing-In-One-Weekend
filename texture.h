@@ -15,7 +15,7 @@
 class texture
 {
 public:
-    virtual color get_color_at(const double &u, const double &v) const {}
+    virtual color get_color_at(const double &u, const double &v) const = 0;
 };
 
 class solid_color_texture : public texture

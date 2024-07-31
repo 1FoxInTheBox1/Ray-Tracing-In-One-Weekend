@@ -37,6 +37,27 @@ public:
         }
         return hit_anything;
     }
+
+    int size() const
+    {
+        return objects.size();
+    }
+
+    shared_ptr<hittable> get(int i) const
+    {
+        return objects[i];
+    }
+
+    aabb get_bounding_box()
+    {
+        aabb bounds;
+        for (const auto &object : objects) {
+            aabb object_bounds = object->get_bounding_box();
+            bounds.growToInclude(object_bounds.min);
+            bounds.growToInclude(object_bounds.max);
+        }
+        return bounds;
+    }
 };
 
 #endif

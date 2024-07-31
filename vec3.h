@@ -171,4 +171,24 @@ inline vec3 refract(const vec3 &uv, const vec3 &n, double etai_over_etat)
   return r_out_perp + r_out_parallel;
 }
 
+vec3 inf_vector() {
+  return vec3(infinity, infinity, infinity);
+}
+
+vec3 min_vector(const vec3 &a, const vec3 &b) {
+  vec3 result = vec3();
+  a.x() < b.x() ? result[0] = a.x() : result[0] = b.x();
+  a.y() < b.y() ? result[1] = a.y() : result[1] = b.y();
+  a.z() < b.z() ? result[2] = a.z() : result[2] = b.z();
+  return result;
+}
+
+vec3 max_vector(const vec3 &a, const vec3 &b) {
+  vec3 result = vec3();
+  a.x() > b.x() ? result[0] = a.x() : result[0] = b.x();
+  a.y() > b.y() ? result[1] = a.y() : result[1] = b.y();
+  a.z() > b.z() ? result[2] = a.z() : result[2] = b.z();
+  return result;
+}
+
 #endif

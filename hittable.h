@@ -3,6 +3,7 @@
 
 #include "rtweekend.h"
 
+class aabb;
 class material;
 
 struct hit_record
@@ -25,8 +26,20 @@ struct hit_record
 class hittable
 {
 public:
+    hittable() : pos(vec3(0, 0, 0)) {}
+    hittable(vec3 position) : pos(position) {}
     virtual ~hittable() = default;
     virtual bool hit(const ray &r, interval ray_t, hit_record &rec) const = 0;
+
+    virtual aabb get_bounding_box() = 0;
+
+    vec3 get_pos() const
+    {
+        return pos;
+    }
+
+private:
+    vec3 pos;
 };
 
 #endif
