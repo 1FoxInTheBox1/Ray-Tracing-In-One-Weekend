@@ -7,11 +7,9 @@
 class bvh_node : public hittable
 {
 public:
-    static int count;
     shared_ptr<bvh_node> left, right;
-    int id;
 
-    bvh_node() : id(count) {}
+    bvh_node() {}
 
     void grow_to_include(shared_ptr<hittable> object)
     {
@@ -30,7 +28,8 @@ public:
 
         if (left == nullptr)
         {
-            if (right == nullptr) {
+            if (right == nullptr)
+            {
                 return objects.hit(r, ray_t, rec);
             }
             return right->hit(r, ray_t, rec);
@@ -67,30 +66,81 @@ private:
     hittable_list objects;
 };
 
-int bvh_node::count = 1;
+double midpoint(const double &a, const double &b)
+{
+    return (a + b) / 2.0;
+}
+
+double get_split_center(const aabb &bounds, int *axis)
+{
+    double x_length = bounds.max.x() - bounds.min.x();
+    double y_length = bounds.max.y() - bounds.min.y();
+    double z_length = bounds.max.z() - bounds.min.z();
+
+    if (x_length > y_length)
+    {
+        if (x_length > z_length)
+        {
+            *axis = 0;
+            return midpoint(bounds.max.x(), bounds.min.x());
+        }
+        else
+        {
+            *axis = 2;
+            return midpoint(bounds.max.z(), bounds.min.z());
+        }
+    }
+    else
+    {
+        if (y_length > z_length)
+        {
+            *axis = 1;
+            return midpoint(bounds.max.y(), bounds.min.y());
+        }
+        else
+        {
+            *axis = 2;
+            return midpoint(bounds.max.z(), bounds.min.z());
+        }
+    }
+}
 
 void split_bvh(shared_ptr<bvh_node> parent, const int &max_depth)
 {
     // Stop splitting if we reached maximum depth
-    if (max_depth == 0)
+    if (max_depth == 0 || parent->get_objects().size() <= 1)
     {
         return;
     }
 
-    bvh_node::count += 1;
     parent->left = make_shared<bvh_node>();
-    bvh_node::count += 1;
     parent->right = make_shared<bvh_node>();
 
     // Determine center of the parent aabb
     aabb bounds = parent->get_bounding_box();
-    double center_x = (bounds.max.x() + bounds.min.x()) / 2.0;
+    int axis = -1;
+    double center = get_split_center(bounds, &axis);
 
-    // Move objects to left or right child depending on if they are
-    // on the left or right side of parent aabb
+    // Move objects to left or right child depending on which
+    // side of the AABB they are on
     for (const auto &object : parent->get_objects().objects)
     {
-        if (object->get_pos().x() > center_x)
+        double object_pos = object->get_pos().x();
+        if (axis == 2)
+        {
+            object_pos = object->get_pos().z();
+        }
+        if (axis == 1)
+        {
+            object_pos = object->get_pos().y();
+        }
+        if (axis == -1)
+        {
+            std::cout << "An error occured while building the BVH";
+            return;
+        }
+
+        if (object_pos > center)
         {
             parent->right->add_object(object);
             parent->right->grow_to_include(object);

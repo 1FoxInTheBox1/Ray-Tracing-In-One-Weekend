@@ -23,19 +23,24 @@ void random_spheres(hittable_list &world)
             {
                 shared_ptr<material> sphere_material;
 
-                if (choose_mat < 0.8)
+                if (choose_mat < 0.6)
                 {
                     // Diffuse
                     auto albedo = color::random() * color::random();
                     sphere_material = make_shared<lambertian>(albedo);
                     world.add(make_shared<sphere>(center, 0.2, sphere_material));
                 }
-                else if (choose_mat < 0.95)
+                else if (choose_mat < 0.75)
                 {
                     // Metal
                     auto albedo = color::random(0.5, 1);
                     auto fuzz = random_double(0, 0.5);
                     sphere_material = make_shared<metal>(albedo, fuzz);
+                    world.add(make_shared<sphere>(center, 0.2, sphere_material));
+                }
+                else if (choose_mat < 0.9)
+                {
+                    sphere_material = make_shared<lambertian>("images/mars.png");
                     world.add(make_shared<sphere>(center, 0.2, sphere_material));
                 }
                 else
@@ -73,7 +78,7 @@ int main()
     auto material1 = make_shared<dielectric>(1.5);
     world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, material1));
 
-    auto material2 = make_shared<lambertian>(color(0.4, 0.2, 0.1));
+    auto material2 = make_shared<lambertian>("images/earth.png");
     world.add(make_shared<sphere>(point3(-4, 1, 0), 1.0, material2));
 
     auto material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
@@ -84,7 +89,7 @@ int main()
     auto bvh_start = std::chrono::high_resolution_clock::now();
 
     auto root = make_shared<bvh_node>();
-    build_bvh(root, world, 4);
+    build_bvh(root, world, 5);
 
     auto bvh_stop = std::chrono::high_resolution_clock::now();
     auto bvh_duration = std::chrono::duration_cast<std::chrono::milliseconds>(bvh_stop - bvh_start);
@@ -93,8 +98,8 @@ int main()
     // Camera Setup
     camera cam;
     cam.aspect_ratio = 16.0 / 9.0;
-    cam.image_width = 600;
-    cam.samples_per_pixel = 10;
+    cam.image_width = 1200;
+    cam.samples_per_pixel = 400;
     cam.max_depth = 50;
 
     // Camera Aiming
@@ -111,11 +116,13 @@ int main()
     std::cout << "Beginning Rendering\n";
     auto render_start = std::chrono::high_resolution_clock::now();
 
-    for (int i = 1; i <= 10; i++)
-    {
-        std::cout << "Rendering Image #" << i << "\n";
-        cam.render(hittable_list(root));
-    }
+    // for (int i = 1; i <= 10; i++)
+    // {
+    //     std::cout << "Rendering Image #" << i << "\n";
+    //     cam.render(hittable_list(root));
+    // }
+
+    cam.render(hittable_list(root));
 
     auto render_stop = std::chrono::high_resolution_clock::now();
     auto render_duration = std::chrono::duration_cast<std::chrono::milliseconds>(render_stop - render_start);
