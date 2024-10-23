@@ -34,11 +34,14 @@ inline double random_double(double min, double max)
     return min + (max - min) * random_double();
 }
 
+// TODO: Uncommenting this causes build errors
+// Figure out how if there's a way to include important headers here
+// or if I need to include each header individually
 // Common Headers
-#include "color.h"
-#include "interval.h"
-#include "ray.h"
-#include "vec3.h"
-#include "aabb.h"
+// #include "vec3.h"
+// #include "color.h"
+// #include "interval.h"
+// #include "ray.h"
+// #include "aabb.h"
 
 #endif

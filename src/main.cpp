@@ -1,11 +1,11 @@
 #include "rtweekend.h"
 
 #include "camera.h"
-#include "hittable.h"
-#include "hittable_list.h"
 #include "sphere.h"
 #include "triangle.h"
-#include "texture.h"
+#include "lambertian_mat.h"
+#include "metal_mat.h"
+#include "dielectric_mat.h"
 #include "bvh_node.h"
 
 #include <chrono>
@@ -63,7 +63,7 @@ void build_bvh(shared_ptr<bvh_node> root, const hittable_list &world, int max_de
         root->add_object(object);
         root->grow_to_include(object);
     }
-    split_bvh(root, max_depth);
+    root->split(max_depth);
 }
 
 int main()

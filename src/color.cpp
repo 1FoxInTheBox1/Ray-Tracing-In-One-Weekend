@@ -1,10 +1,4 @@
-#ifndef COLOR_H
-#define COLOR_H
-
-#include "interval.h"
-#include "vec3.h"
-
-using color = vec3;
+#include "color.h"
 
 // When the rendered image is displayed, the program displaying it
 // likely assumes it is gamma corrected
@@ -36,5 +30,3 @@ void write_color(std::ostream &out, const color &pixel_color)
 
     out << rbyte << ' ' << gbyte << ' ' << bbyte << '\n';
 }
-
-#endif
