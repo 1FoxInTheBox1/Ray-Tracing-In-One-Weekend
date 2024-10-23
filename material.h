@@ -39,7 +39,6 @@ public:
         }
 
         scattered = ray(rec.p, scatter_direction);
-        // std::cout << rec.u << " " << rec.v << "\n";
         attenuation = texture->get_color_at(rec.u, rec.v);
         return true;
     }

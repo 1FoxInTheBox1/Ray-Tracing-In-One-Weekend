@@ -4,6 +4,7 @@
 #include "hittable.h"
 #include "hittable_list.h"
 #include "sphere.h"
+#include "triangle.h"
 #include "texture.h"
 #include "bvh_node.h"
 
@@ -70,21 +71,29 @@ int main()
     // World Setup
     hittable_list world;
 
-    // auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
+    auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
     // world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, ground_material));
 
-    random_spheres(world);
+    // random_spheres(world);
 
     auto material1 = make_shared<dielectric>(1.5);
-    world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, material1));
+    // world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, material1));
 
     auto material2 = make_shared<lambertian>("images/earth.png");
-    world.add(make_shared<sphere>(point3(-4, 1, 0), 1.0, material2));
+    // world.add(make_shared<sphere>(point3(-4, 1, 0), 1.0, material2));
 
-    auto material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
-    world.add(make_shared<sphere>(point3(4, 1, 0), 1.0, material3));
+    auto material3 = make_shared<metal>(color(1.0, 0.6, 0.5), 0.0);
+    // world.add(make_shared<sphere>(point3(-1, 0, -8), 0.5, material3));
 
-    // // Build BVH
+    world.add(make_shared<triangle>(point3(-1, 1, -8), point3(1, 1, -8), point3(0, -1, -8), material1));
+
+    world.add(make_shared<triangle>(point3(-1, -1, -10), point3(1, -1, -10), point3(0, 1, -10), material2));
+
+    world.add(make_shared<triangle>(point3(-4, -1, -12), point3(4, -1, -12), point3(0, -1, -0), material3));
+
+    world.add(make_shared<sphere>(point3(3, 0.2, -10), 0.5, ground_material));
+
+    // Build BVH
     std::cout << "Building BVH\n";
     auto bvh_start = std::chrono::high_resolution_clock::now();
 
@@ -98,19 +107,19 @@ int main()
     // Camera Setup
     camera cam;
     cam.aspect_ratio = 16.0 / 9.0;
-    cam.image_width = 1200;
-    cam.samples_per_pixel = 400;
+    cam.image_width = 600;
+    cam.samples_per_pixel = 4;
     cam.max_depth = 50;
 
     // Camera Aiming
     cam.vfov = 20;
-    cam.lookfrom = point3(13, 2, 3);
-    cam.lookat = point3(0, 0, 0);
+    cam.lookfrom = point3(0, 0, 2);
+    cam.lookat = point3(0, 0, -2);
     cam.vup = vec3(0, 1, 0);
 
     // Defocus Blur settings
     cam.defocus_angle = .6;
-    cam.focus_dist = 10.0;
+    cam.focus_dist = 8.5;
 
     // Render
     std::cout << "Beginning Rendering\n";
@@ -123,6 +132,7 @@ int main()
     // }
 
     cam.render(hittable_list(root));
+    // cam.fireSingleRay(hittable_list(root));
 
     auto render_stop = std::chrono::high_resolution_clock::now();
     auto render_duration = std::chrono::duration_cast<std::chrono::milliseconds>(render_stop - render_start);

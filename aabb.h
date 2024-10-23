@@ -23,7 +23,7 @@ public:
     // This function is pulled straight from
     // Ray Tracing: The Next Week
     // because I got lazy and didn't want to do it myself
-    // I believe it uses the slab method
+    // It uses the slab method
     bool hit(const ray &r, interval ray_t) const
     {
         const point3 &ray_orig = r.origin();
@@ -56,7 +56,7 @@ public:
                     ray_t.max = t0;
             }
 
-            if (ray_t.max <= ray_t.min)
+            if (ray_t.max < ray_t.min)
                 return false;
         }
         return true;

@@ -50,8 +50,19 @@ public:
                 write_color(output_file, pixel_samples_scale * pixel_color);
             }
         }
+
         std::clog << "\rDone.                 \n";
         output_file.close();
+    }
+
+    // Fires a single ray at the center of the screen.
+    // Used for testing
+    void fireSingleRay(const hittable &world)
+    {
+        initialize();
+        ray r = get_ray(image_width / 2, image_height / 2);
+        color c = ray_color(r, max_depth, world);
+        std::cout << "Got color: " << c << "\n";
     }
 
 private:
@@ -138,15 +149,19 @@ private:
 
     color ray_color(const ray &r, int depth, const hittable &world) const
     {
+        // std::cout << "Firing ray from " << r.origin() << " in direction " << r.direction() << "\n";
+
         // If we've exceeded the ray bounce limit, return black
         if (depth <= 0)
         {
+            // std::cout << "Hit depth limit\n";
             return color(0, 0, 0);
         }
 
         hit_record rec;
         if (world.hit(r, interval(0.001, infinity), rec))
         {
+            // std::cout << "Found hit at " << rec.p << " with t value " << rec.t << "\n";
             ray scattered;
             color attenuation;
             // If scatter() returns true then the ray was not absorbed
@@ -157,6 +172,7 @@ private:
             return color(0, 0, 0);
         }
 
+        // std::cout << "Sent to bg \n";
         // Create background gradient with a linear interpolation
         vec3 unit_direction = unit_vector(r.direction());
         auto a = 0.5 * (unit_direction.y() + 1.0);
