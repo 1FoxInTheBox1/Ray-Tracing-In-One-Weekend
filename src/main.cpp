@@ -7,6 +7,7 @@
 #include "metal_mat.h"
 #include "dielectric_mat.h"
 #include "bvh_node.h"
+#include "model_loader.h"
 
 #include <chrono>
 
@@ -70,8 +71,9 @@ int main()
 {
     // World Setup
     hittable_list world;
-
     auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
+    load_file("data/cube.txt", world, ground_material);
+
     // world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, ground_material));
 
     // random_spheres(world);
@@ -85,13 +87,13 @@ int main()
     auto material3 = make_shared<metal>(color(1.0, 0.6, 0.5), 0.0);
     // world.add(make_shared<sphere>(point3(-1, 0, -8), 0.5, material3));
 
-    world.add(make_shared<triangle>(point3(-1, 1, -8), point3(1, 1, -8), point3(0, -1, -8), material1));
+    // world.add(make_shared<triangle>(point3(-1, 1, -8), point3(1, 1, -8), point3(0, -1, -8), material1));
 
-    world.add(make_shared<triangle>(point3(-1, -1, -10), point3(1, -1, -10), point3(0, 1, -10), material2));
+    // world.add(make_shared<triangle>(point3(-1, -1, -10), point3(1, -1, -10), point3(0, 1, -10), material2));
 
-    world.add(make_shared<triangle>(point3(-4, -1, -12), point3(4, -1, -12), point3(0, -1, -0), material3));
+    // world.add(make_shared<triangle>(point3(-4, -1, -12), point3(4, -1, -12), point3(0, -1, -0), material3));
 
-    world.add(make_shared<sphere>(point3(3, 0.2, -10), 0.5, ground_material));
+    // world.add(make_shared<sphere>(point3(3, 0.2, -10), 0.5, ground_material));
 
     // Build BVH
     std::cout << "Building BVH\n";
@@ -113,8 +115,8 @@ int main()
 
     // Camera Aiming
     cam.vfov = 20;
-    cam.lookfrom = point3(0, 0, 2);
-    cam.lookat = point3(0, 0, -2);
+    cam.lookfrom = point3(5, 5, 5);
+    cam.lookat = point3(0, 0, 0);
     cam.vup = vec3(0, 1, 0);
 
     // Defocus Blur settings

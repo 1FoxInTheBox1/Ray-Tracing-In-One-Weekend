@@ -39,5 +39,7 @@ target_sources(${PROJECT_NAME}
     src/triangle.cpp
     src/vec3.h
     src/vec3.cpp
+    src/model_loader.h
+    src/model_loader.cpp
     external/stb_image.h
     )
