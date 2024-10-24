@@ -41,5 +41,7 @@ target_sources(${PROJECT_NAME}
     src/vec3.cpp
     src/model_loader.h
     src/model_loader.cpp
+    src/mesh.h
+    src/mesh.cpp
     external/stb_image.h
     )

@@ -62,7 +62,6 @@ void bvh_node::split(const int &max_depth)
     right = make_shared<bvh_node>();
 
     // Determine center of the parent aabb
-    aabb bounds = get_bounding_box();
     int axis = -1;
     double center = get_split_center(bounds, &axis);
 

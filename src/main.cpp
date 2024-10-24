@@ -2,7 +2,7 @@
 
 #include "camera.h"
 #include "sphere.h"
-#include "triangle.h"
+#include "mesh.h"
 #include "lambertian_mat.h"
 #include "metal_mat.h"
 #include "dielectric_mat.h"
@@ -56,7 +56,7 @@ void random_spheres(hittable_list &world)
     }
 }
 
-void build_bvh(shared_ptr<bvh_node> root, const hittable_list &world, int max_depth)
+void build_bvh(shared_ptr<bvh_node> &root, const hittable_list &world, int max_depth)
 {
     for (int i = 0; i < world.size(); i++)
     {
@@ -75,13 +75,16 @@ int main()
     auto material2 = make_shared<lambertian>("images/earth.png");
     auto material3 = make_shared<metal>(color(1.0, 0.6, 0.5), 0.0);
     auto material4 = make_shared<lambertian>(color(0.5, 0.5, 0.5));
-    std::cout << "Cube 1" << "\n";
-    load_file("data/cube.txt", point3(0, 0, 0), world, material2);
-    std::cout << "Cube 2" << "\n";
-    load_file("data/cube.txt", point3(-2, 0, 2), world, material4);
-    std::cout << "Cube 3" << "\n";
-    load_file("data/cube.txt", point3(2, 0, -2), world, material3);
-    load_file("data/plane.txt", point3(0, -2, 0), world, material4);
+
+    auto cube1 = make_shared<mesh>("data/cube.txt", point3(0, 0 ,0), material2);
+    auto cube2 = make_shared<mesh>("data/cube.txt", point3(-2, 0, 2), material4);
+    auto cube3 = make_shared<mesh>("data/cube.txt", point3(2, 0, -2), material3);
+    auto cube4 = make_shared<mesh>("data/plane.txt", point3(0, -2, 0), material4);
+
+    cube1->add_to_list(world);
+    cube2->add_to_list(world);
+    cube3->add_to_list(world);
+    cube4->add_to_list(world);
 
     // world.add(make_shared<sphere>(point3(0, 0, 0), 1, material2));
     // random_spheres(world);
