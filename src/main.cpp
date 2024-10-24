@@ -71,29 +71,19 @@ int main()
 {
     // World Setup
     hittable_list world;
-    auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
-    load_file("data/cube.txt", world, ground_material);
-
-    // world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, ground_material));
-
-    // random_spheres(world);
-
     auto material1 = make_shared<dielectric>(1.5);
-    // world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, material1));
-
     auto material2 = make_shared<lambertian>("images/earth.png");
-    // world.add(make_shared<sphere>(point3(-4, 1, 0), 1.0, material2));
-
     auto material3 = make_shared<metal>(color(1.0, 0.6, 0.5), 0.0);
-    // world.add(make_shared<sphere>(point3(-1, 0, -8), 0.5, material3));
+    auto material4 = make_shared<lambertian>(color(0.5, 0.5, 0.5));
+    std::cout << "Cube 1" << "\n";
+    load_file("data/cube.txt", point3(0, 0, 0), world, material2);
+    std::cout << "Cube 2" << "\n";
+    load_file("data/cube.txt", point3(-2, 0, 2), world, material4);
+    std::cout << "Cube 3" << "\n";
+    load_file("data/cube.txt", point3(2, 0, -2), world, material3);
 
-    // world.add(make_shared<triangle>(point3(-1, 1, -8), point3(1, 1, -8), point3(0, -1, -8), material1));
-
-    // world.add(make_shared<triangle>(point3(-1, -1, -10), point3(1, -1, -10), point3(0, 1, -10), material2));
-
-    // world.add(make_shared<triangle>(point3(-4, -1, -12), point3(4, -1, -12), point3(0, -1, -0), material3));
-
-    // world.add(make_shared<sphere>(point3(3, 0.2, -10), 0.5, ground_material));
+    world.add(make_shared<sphere>(point3(0, 0, 0), 0.1, material4));
+    // random_spheres(world);
 
     // Build BVH
     std::cout << "Building BVH\n";
@@ -109,19 +99,19 @@ int main()
     // Camera Setup
     camera cam;
     cam.aspect_ratio = 16.0 / 9.0;
-    cam.image_width = 600;
-    cam.samples_per_pixel = 4;
+    cam.image_width = 700;
+    cam.samples_per_pixel = 8;
     cam.max_depth = 50;
 
     // Camera Aiming
     cam.vfov = 20;
-    cam.lookfrom = point3(5, 5, 5);
+    cam.lookfrom = point3(8, 5, 8);
     cam.lookat = point3(0, 0, 0);
     cam.vup = vec3(0, 1, 0);
 
     // Defocus Blur settings
-    cam.defocus_angle = .6;
-    cam.focus_dist = 8.5;
+    cam.defocus_angle = 0;
+    cam.focus_dist = 10;
 
     // Render
     std::cout << "Beginning Rendering\n";

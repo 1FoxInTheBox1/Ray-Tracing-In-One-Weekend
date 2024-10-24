@@ -5,5 +5,5 @@
 #include <sstream>
 #include <vector>
 
-void load_file(const char *filename, hittable_list &world, shared_ptr<material> mat);
+void load_file(const char *filename, point3 position, hittable_list &world, shared_ptr<material> mat);
 std::vector<std::string> split_string(std::string s, char c);
