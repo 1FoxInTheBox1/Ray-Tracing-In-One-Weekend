@@ -1,7 +1,18 @@
 #include "triangle.h"
 
 triangle::triangle(const point3 &p0, const point3 &p1, const point3 &p2, shared_ptr<material> mat)
-        : p0(p0), p1(p1), p2(p2), mat(mat), hittable((p0 + p1 + p2) / 3) {}
+                    : p0(p0), p1(p1), p2(p2), mat(mat), 
+                    tex_coord0(vec3(0, 0, 0)), tex_coord1(vec3(1, 0, 0)), tex_coord2(vec3(0, 1, 0)),
+                    hittable((p0 + p1 + p2) / 3) {}
+
+triangle::triangle(const point3 &p0, const point3 &p1, const point3 &p2, 
+                    const point3 &tex_coord0, const point3 &tex_coord1, const point3 &tex_coord2, 
+                    shared_ptr<material> mat)
+                    : p0(p0), p1(p1), p2(p2), 
+                    tex_coord0(min_vector(max_vector(tex_coord0, vec3(0, 0, 0)), vec3(1,1,1))), 
+                    tex_coord1(min_vector(max_vector(tex_coord1, vec3(0, 0, 0)), vec3(1,1,1))), 
+                    tex_coord2(min_vector(max_vector(tex_coord2, vec3(0, 0, 0)), vec3(1,1,1))),
+                    mat(mat), hittable((p0 + p1 + p2) / 3) {}
 
 bool triangle::hit (const ray &ray, interval ray_t, hit_record &rec) const
 {
@@ -47,8 +58,9 @@ bool triangle::hit (const ray &ray, interval ray_t, hit_record &rec) const
     //std::cout << unit_vector(cross(e1, e2)) << "\n";
     // std::cout << ray.direction() << " - " << rec.normal << "\n";
     // rec.normal = unit_vector(cross(e1, e2));
-    rec.u = u;
-    rec.v = v;
+    // std::cout << u << " - " << v << "\n";
+    rec.u = (1 - u - v) * tex_coord0.x() + u * tex_coord1.x() + v * tex_coord2.x();
+    rec.v = (1 - u - v) * tex_coord0.y() + u * tex_coord1.y() + v * tex_coord2.y();
     rec.mat = mat;
     return true;
 }

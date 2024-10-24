@@ -81,8 +81,9 @@ int main()
     load_file("data/cube.txt", point3(-2, 0, 2), world, material4);
     std::cout << "Cube 3" << "\n";
     load_file("data/cube.txt", point3(2, 0, -2), world, material3);
+    load_file("data/plane.txt", point3(0, -2, 0), world, material4);
 
-    world.add(make_shared<sphere>(point3(0, 0, 0), 0.1, material4));
+    // world.add(make_shared<sphere>(point3(0, 0, 0), 1, material2));
     // random_spheres(world);
 
     // Build BVH
