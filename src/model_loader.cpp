@@ -10,19 +10,35 @@ void load_file(const char *filename, point3 position, hittable_list &world, shar
     ifstream file(filename);
 
     int i = 0;
-    while (getline(file, fileOut)) {
+    while (getline(file, fileOut)) 
+    {
         vector<string> coordList = split_string(fileOut, ' ');
+        
         vec3 vertex = vec3(atof(coordList[0].data()), atof(coordList[1].data()), atof(coordList[2].data()));
-        vec3 tex_coord = vec3(atof(coordList[3].data()), atof(coordList[4].data()), 0.0);
         vertex += position;
         // cout << "Added vertex " << vertex << "\n";
+
+        if (coordList.size() >= 5) 
+        {
+            vec3 tex_coord = vec3(atof(coordList[3].data()), atof(coordList[4].data()), 0.0);
+            tex_coords.push_back(tex_coord);
+        } 
+
         vertices.push_back(vertex);
-        tex_coords.push_back(tex_coord);
     }
 
-    for (i = 0; i < vertices.size(); i += 3) {
-        auto tri = make_shared<triangle>(vertices[i], vertices[i + 1], vertices[i + 2], 
-                                            tex_coords[i], tex_coords[i + 1], tex_coords[i + 2], mat);
+    for (i = 0; i < vertices.size(); i += 3) 
+    {
+        shared_ptr<triangle> tri;
+        if (!tex_coords.empty()) 
+        {
+            tri = make_shared<triangle>(vertices[i], vertices[i + 1], vertices[i + 2], 
+                                                tex_coords[i], tex_coords[i + 1], tex_coords[i + 2], mat);
+        } 
+        else
+        {
+            tri = make_shared<triangle>(vertices[i], vertices[i + 1], vertices[i + 2], mat);
+        }
         // cout << "Added triangle " << *tri << "\n";
         world.add(tri);
     }
