@@ -10,21 +10,28 @@ void camera::render(const hittable &world)
     output_file << "P3\n"
                 << image_width << " " << image_height << "\n255\n";
 
-    // Render
-    for (int j = 0; j < image_height; j++)
+    // Create threads
+    std::thread threads[NUM_THREADS];
+    std::vector<color> completed[NUM_THREADS];
+    int total_lines = image_height;
+    for (int i = 0; i < NUM_THREADS; i++) 
     {
-        std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
-        for (int i = 0; i < image_width; i++)
+        completed[i] = std::vector<color>();
+        threads[i] = std::thread(&camera::run_thread, this, std::ref(world), i, std::ref(completed[i]));
+    }
+    
+    // Join threads
+    for (int i = 0; i < NUM_THREADS; i++)
+    {
+        threads[i].join();
+    }
+
+    // Write colors
+    for (int i = 0; i < NUM_THREADS; i++)
+    {
+        for (auto pixel : completed[i])
         {
-            color pixel_color(0, 0, 0);
-            // Get random samples around each pixel and then
-            // average the results to determine the final displayed color
-            for (int sample = 0; sample < samples_per_pixel; sample++)
-            {
-                ray r = get_ray(i, j);
-                pixel_color += ray_color(r, max_depth, world);
-            }
-            write_color(output_file, pixel_samples_scale * pixel_color);
+            write_color(output_file, pixel);
         }
     }
 
@@ -32,7 +39,31 @@ void camera::render(const hittable &world)
     output_file.close();
 }
 
-void camera::fireSingleRay(const hittable &world)
+void camera::run_thread(const hittable &world, const int thread_num, std::vector<color> &completed)
+{
+    int work_size = image_height / NUM_THREADS;
+    int work_height = work_size;
+    work_size += (thread_num % NUM_THREADS == NUM_THREADS - 1) ? image_height % work_size : 0;
+    // Render
+    for (int j = 0; j < work_size; j++)
+    {
+        // std::clog << "\rScanlines remaining: " << (work_size - j) << ' ' << std::flush;
+        for (int i = 0; i < image_width; i++)
+        {
+            color pixel_color(0, 0, 0);
+            // Get random samples around each pixel and then
+            // average the results to determine the final displayed color
+            for (int sample = 0; sample < samples_per_pixel; sample++)
+            {
+                ray r = get_ray(i, j + (work_height * thread_num));
+                pixel_color += ray_color(r, max_depth, world);
+            }
+            completed.push_back(pixel_samples_scale * pixel_color);
+        }
+    }
+}
+
+void camera::fire_single_ray(const hittable &world)
 {
     initialize();
     ray r = get_ray(image_width / 2, image_height / 2);

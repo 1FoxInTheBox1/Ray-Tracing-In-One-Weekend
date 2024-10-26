@@ -6,6 +6,10 @@
 #include "material.h"
 
 #include <fstream>
+#include <thread>
+#include <vector>
+
+#define NUM_THREADS 4
 
 class camera
 {
@@ -26,10 +30,11 @@ public:
     void render(const hittable &world);
     // Fires a single ray at the center of the screen.
     // Used for testing
-    void fireSingleRay(const hittable &world);
+    void fire_single_ray(const hittable &world);
 
 private:
     void initialize();
+    void run_thread(const hittable &world, const int thread_num, std::vector<color> &completed);
     ray get_ray(int i, int j) const;
     vec3 sample_square() const;
     vec3 defocus_disk_sample() const;

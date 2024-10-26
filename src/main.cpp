@@ -1,5 +1,4 @@
 #include "rtweekend.h"
-
 #include "camera.h"
 #include "sphere.h"
 #include "mesh.h"
@@ -121,14 +120,8 @@ int main()
     std::cout << "Beginning Rendering\n";
     auto render_start = std::chrono::high_resolution_clock::now();
 
-    // for (int i = 1; i <= 10; i++)
-    // {
-    //     std::cout << "Rendering Image #" << i << "\n";
-    //     cam.render(hittable_list(root));
-    // }
-
     cam.render(hittable_list(root));
-    // cam.fireSingleRay(hittable_list(root));
+    // cam.fireSingleRay(hittable_list(root)); 
 
     auto render_stop = std::chrono::high_resolution_clock::now();
     auto render_duration = std::chrono::duration_cast<std::chrono::milliseconds>(render_stop - render_start);
