@@ -75,15 +75,15 @@ int main()
     auto material3 = make_shared<metal>(color(1.0, 0.6, 0.5), 0.0);
     auto material4 = make_shared<lambertian>(color(0.5, 0.5, 0.5));
 
-    auto cube1 = make_shared<mesh>("data/cube.txt", point3(0, 0 ,0), material2);
-    auto cube2 = make_shared<mesh>("data/cube.txt", point3(-2, 0, 2), material4);
-    auto cube3 = make_shared<mesh>("data/cube.txt", point3(2, 0, -2), material3);
-    auto cube4 = make_shared<mesh>("data/plane.txt", point3(0, -2, 0), material4);
+    auto cube1 = make_shared<mesh>("data/cube.txt", point3(0, 0 ,0), vec3(2, 1, 2), material2);
+    // auto cube2 = make_shared<mesh>("data/cube.txt", point3(-2, 0, 2), vec3(.5, 2, .5), material4);
+    // auto cube3 = make_shared<mesh>("data/cube.txt", point3(2, 0, -2), vec3(.5, .5, .5), material3);
+    // auto cube4 = make_shared<mesh>("data/plane.txt", point3(0, -2, 0), vec3(10, 10, 10), material4);
 
     cube1->add_to_list(world);
-    cube2->add_to_list(world);
-    cube3->add_to_list(world);
-    cube4->add_to_list(world);
+    // cube2->add_to_list(world);
+    // cube3->add_to_list(world);
+    // cube4->add_to_list(world);
 
     // world.add(make_shared<sphere>(point3(0, 0, 0), 1, material2));
     // random_spheres(world);
@@ -97,7 +97,7 @@ int main()
 
     auto bvh_stop = std::chrono::high_resolution_clock::now();
     auto bvh_duration = std::chrono::duration_cast<std::chrono::milliseconds>(bvh_stop - bvh_start);
-    std::cout << "BVH Construction complete in " << bvh_duration.count() << " microseconds\n";
+    std::cout << "BVH Construction complete in " << bvh_duration.count() << " milliseconds\n";
 
     // Camera Setup
     camera cam;
@@ -125,6 +125,6 @@ int main()
 
     auto render_stop = std::chrono::high_resolution_clock::now();
     auto render_duration = std::chrono::duration_cast<std::chrono::milliseconds>(render_stop - render_start);
-    std::cout << "Rendering complete in " << render_duration.count() << " microseconds\nPress enter to exit\n";
+    std::cout << "Rendering complete in " << render_duration.count() << " milliseconds\nPress enter to exit\n";
     std::cin.get();
 }
