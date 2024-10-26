@@ -13,7 +13,7 @@ void camera::render(const hittable &world)
     // Create threads
     std::thread threads[NUM_THREADS];
     std::vector<color> completed[NUM_THREADS];
-    int total_lines = image_height;
+    lines_remaining = image_height;
     for (int i = 0; i < NUM_THREADS; i++) 
     {
         completed[i] = std::vector<color>();
@@ -47,7 +47,10 @@ void camera::run_thread(const hittable &world, const int thread_num, std::vector
     // Render
     for (int j = 0; j < work_size; j++)
     {
-        // std::clog << "\rScanlines remaining: " << (work_size - j) << ' ' << std::flush;
+        cam_mtx.lock();
+        lines_remaining--;
+        std::clog << "\rScanlines remaining: " << lines_remaining << ' ' << std::flush;
+        cam_mtx.unlock();
         for (int i = 0; i < image_width; i++)
         {
             color pixel_color(0, 0, 0);
