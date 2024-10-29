@@ -48,6 +48,15 @@ bool vec3::near_zero() const
     return (fabs(e[0]) < s) && (fabs(e[1]) < s) && (fabs(e[2]) < s);
 }
 
+void vec3::rotate(const quaternion &q)
+{
+    matrix m1 = matrix::rotation_from_quaternion(q);
+    vec3 rotated = (m1 * vec3(e[0], e[1], e[2]));
+    e[0] = rotated[0];
+    e[1] = rotated[1];
+    e[2] = rotated[2];
+}
+
 vec3 inf_vector() {
   return vec3(infinity, infinity, infinity);
 }

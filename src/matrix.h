@@ -1,3 +1,6 @@
+#ifndef MATRIX_H
+#define MATRIX_H
+
 #include "rtweekend.h"
 #include "quaternion.h"
 
@@ -20,6 +23,8 @@ private:
     double data[4][4];
 };
 
+matrix identity_matrix();
+
 inline std::ostream &operator<<(std::ostream &out, const matrix &m)
 {
   return out << m(0, 0) << ' ' << m(0, 1) << ' ' << m(0, 2) << ' ' << m(0, 3) << '\n'
@@ -29,3 +34,4 @@ inline std::ostream &operator<<(std::ostream &out, const matrix &m)
     // return out << "test";
 }
 
+#endif

@@ -7,6 +7,7 @@
 #include "dielectric_mat.h"
 #include "bvh_node.h"
 #include "model_loader.h"
+#include "matrix.h"
 
 #include <chrono>
 
@@ -75,7 +76,8 @@ int main()
     auto material3 = make_shared<metal>(color(1.0, 0.6, 0.5), 0.0);
     auto material4 = make_shared<lambertian>(color(0.5, 0.5, 0.5));
 
-    auto cube1 = make_shared<mesh>("data/cube.txt", point3(0, 0 ,0), vec3(2, 1, 2), material2);
+    // auto cube1 = make_shared<mesh>("data/cube.txt", point3(0, 0 ,0), vec3(1, 1, 1), quaternion(-1, 0, 0, pi/4), material2);
+    auto cube1 = make_shared<mesh>("data/cube.txt", point3(0, 0, 0), material2);
     // auto cube2 = make_shared<mesh>("data/cube.txt", point3(-2, 0, 2), vec3(.5, 2, .5), material4);
     // auto cube3 = make_shared<mesh>("data/cube.txt", point3(2, 0, -2), vec3(.5, .5, .5), material3);
     // auto cube4 = make_shared<mesh>("data/plane.txt", point3(0, -2, 0), vec3(10, 10, 10), material4);
@@ -108,7 +110,7 @@ int main()
 
     // Camera Aiming
     cam.vfov = 20;
-    cam.lookfrom = point3(8, 5, 8);
+    cam.lookfrom = point3(15, 0, 0);
     cam.lookat = point3(0, 0, 0);
     cam.vup = vec3(0, 1, 0);
 
@@ -120,8 +122,9 @@ int main()
     std::cout << "Beginning Rendering\n";
     auto render_start = std::chrono::high_resolution_clock::now();
 
+    // TODO: Everything is upside down after rotation, fix this!
     cam.render(hittable_list(root));
-    // cam.fireSingleRay(hittable_list(root)); 
+    // cam.fire_single_ray(hittable_list(root)); 
 
     auto render_stop = std::chrono::high_resolution_clock::now();
     auto render_duration = std::chrono::duration_cast<std::chrono::milliseconds>(render_stop - render_start);

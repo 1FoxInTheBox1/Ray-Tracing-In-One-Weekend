@@ -7,7 +7,7 @@
 class mesh : public hittable
 {
 public:
-    mesh(const char *filename, point3 position, vec3 scale, shared_ptr<material> mat);
+    mesh(const char *filename, point3 position, vec3 scale, quaternion rotation, shared_ptr<material> mat) ;
     mesh(const char *filename, point3 position, shared_ptr<material> mat);
 
     bool hit(const ray &r, interval ray_t, hit_record &rec) const override;

@@ -1,7 +1,7 @@
 #include "model_loader.h"
 using namespace std;
 
-void load_file(const char *filename, point3 position, vec3 scale, hittable_list &world, shared_ptr<material> mat)
+void load_file(const char *filename, point3 position, vec3 scale, quaternion rotation, hittable_list &world, shared_ptr<material> mat)
 {
     string fileOut;
     vector<vec3> vertices;
@@ -17,6 +17,7 @@ void load_file(const char *filename, point3 position, vec3 scale, hittable_list 
         vec3 vertex = vec3(atof(coordList[0].data()), atof(coordList[1].data()), atof(coordList[2].data()));
         vertex *= scale;
         vertex += position;
+        vertex.rotate(rotation);
         // cout << "Added vertex " << vertex << "\n";
 
         if (coordList.size() >= 5) 
