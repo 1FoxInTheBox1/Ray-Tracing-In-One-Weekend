@@ -39,6 +39,10 @@ target_sources(${PROJECT_NAME}
     src/triangle.cpp
     src/vec3.h
     src/vec3.cpp
+    src/quaternion.h
+    src/quaternion.cpp
+    src/matrix.h
+    src/matrix.cpp
     src/model_loader.h
     src/model_loader.cpp
     src/mesh.h
