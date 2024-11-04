@@ -77,14 +77,15 @@ int main()
     auto material4 = make_shared<lambertian>(color(0.5, 0.5, 0.5));
     auto material5 = make_shared<lambertian>(color(1.0, 0.0, 1.0));
 
-    // auto cube1 = make_shared<mesh>("data/cube.txt", point3(0, 0 ,0), vec3(1, 1, 1), quaternion(-1, 0, 0, pi/4), material2);
-    auto cube1 = make_shared<mesh>("data/cube.txt", point3(0, 0, 0), vec3(1, 1, 1), quaternion(1, 0, 0, pi/3), material2);
+    // auto cube1 = make_shared<mesh>("data/cube.txt", point3(0, 0 ,0), vec3(1, 1, 1), quaternion(0, 0, 0), material2);
+    auto cube1 = make_shared<mesh>("data/cube.txt", point3(0, 0, -1.5), vec3(1, 1, 1), quaternion(0, 0, 0), material2);
+    auto cube2 = make_shared<mesh>("data/cube.txt", point3(0, 0, 1.5), vec3(1, 1, 1), quaternion(0, 0, 0, 0), material2);
     // auto cube2 = make_shared<mesh>("data/cube.txt", point3(-2, 0, 2), vec3(.5, 2, .5), material4);
     // auto cube3 = make_shared<mesh>("data/cube.txt", point3(2, 0, -2), vec3(.5, .5, .5), material3);
     // auto cube4 = make_shared<mesh>("data/plane.txt", point3(0, -2, 0), vec3(10, 10, 10), material4);
 
     cube1->add_to_list(world);
-    // cube2->add_to_list(world);
+    cube2->add_to_list(world);
     // cube3->add_to_list(world);
     // cube4->add_to_list(world);
 

@@ -52,6 +52,7 @@ using point3 = vec3;
 vec3 inf_vector();
 vec3 min_vector(const vec3 &a, const vec3 &b);
 vec3 max_vector(const vec3 &a, const vec3 &b);
+vec3 to_euler_angles(const quaternion &q);
 
 inline std::ostream &operator<<(std::ostream &out, const vec3 &v)
 {
