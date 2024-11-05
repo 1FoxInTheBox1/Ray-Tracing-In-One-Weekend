@@ -78,19 +78,19 @@ int main()
     auto material5 = make_shared<lambertian>(color(1.0, 0.0, 1.0));
 
     // auto cube1 = make_shared<mesh>("data/cube.txt", point3(0, 0 ,0), vec3(1, 1, 1), quaternion(0, 0, 0), material2);
-    auto cube1 = make_shared<mesh>("data/cube.txt", point3(0, 0, -1.5), vec3(1, 1, 1), quaternion(0, 0, 0), material2);
-    auto cube2 = make_shared<mesh>("data/cube.txt", point3(0, 0, 1.5), vec3(1, 1, 1), quaternion(0, 0, 0, 0), material2);
+    // auto cube1 = make_shared<mesh>("data/cube.txt", point3(0, 0, -1.5), vec3(1, 1, 1), quaternion(0, 0, 0), material2);
+    // auto cube2 = make_shared<mesh>("data/cube.txt", point3(0, 0, 1.5), vec3(1, 1, 1), quaternion(0, 0, 0, 0), material2);
     // auto cube2 = make_shared<mesh>("data/cube.txt", point3(-2, 0, 2), vec3(.5, 2, .5), material4);
     // auto cube3 = make_shared<mesh>("data/cube.txt", point3(2, 0, -2), vec3(.5, .5, .5), material3);
-    // auto cube4 = make_shared<mesh>("data/plane.txt", point3(0, -2, 0), vec3(10, 10, 10), material4);
+    auto cube4 = make_shared<mesh>("data/plane.txt", point3(0, -2, 0), vec3(10, 10, 10), quaternion(0, 0, 0), material4);
 
-    cube1->add_to_list(world);
-    cube2->add_to_list(world);
+    // cube1->add_to_list(world);
+    // cube2->add_to_list(world);
     // cube3->add_to_list(world);
-    // cube4->add_to_list(world);
+    cube4->add_to_list(world);
 
     // world.add(make_shared<sphere>(point3(1, 0, 0), .2, material5));
-    // random_spheres(world);
+    random_spheres(world);
 
     // Build BVH
     std::cout << "Building BVH\n";
@@ -106,13 +106,13 @@ int main()
     // Camera Setup
     camera cam;
     cam.aspect_ratio = 16.0 / 9.0;
-    cam.image_width = 700;
-    cam.samples_per_pixel = 8;
+    cam.image_width = 1200;
+    cam.samples_per_pixel = 50;
     cam.max_depth = 50;
 
     // Camera Aiming
     cam.vfov = 20;
-    cam.lookfrom = point3(15, 0, 0);
+    cam.lookfrom = point3(11, 6, 11);
     cam.lookat = point3(0, 0, 0);
     cam.vup = vec3(0, 1, 0);
 

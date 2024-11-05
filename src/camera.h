@@ -10,8 +10,6 @@
 #include <mutex> 
 #include <vector>
 
-#define NUM_THREADS 8
-
 class camera
 {
 public:
