@@ -7,12 +7,14 @@
 
 #include <iostream>
 
+// An abstract class representing a texture
 class texture
 {
 public:
     virtual color get_color_at(const double &u, const double &v) const = 0;
 };
 
+// A class representing a texture consisting only of one color
 class solid_color_texture : public texture
 {
 public:
@@ -25,6 +27,7 @@ private:
     color albedo;
 };
 
+// A class representing a texture that pulls colors from an image
 class image_texture : public texture
 {
 public:

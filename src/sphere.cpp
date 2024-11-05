@@ -17,7 +17,9 @@ bool sphere::hit(const ray &r, interval ray_t, hit_record &rec) const
     // If the discriminant is positive and non-zero, there are 2 solutions
     // (AKA the sphere hits the sphere in two locations)
     // If it is zero, there is 1 solution and the ray is tangential to the sphere
-    // We say that these rays do not hit the sphere
+    // There was a comment here that said we ignore those tangential rays,
+    // but this code doesn't seem to do that.
+    // Noting it here just in case that ends up being important
     auto discriminant = h * h - a * c;
     if (discriminant < 0)
     {
@@ -46,6 +48,8 @@ bool sphere::hit(const ray &r, interval ray_t, hit_record &rec) const
     return true;
 }
 
+// Uses a spherical projection to turn a point on a sphere into
+// a UV coordinate pair
 void sphere::get_uv_coordinate(const point3 &p, double &u, double &v) const
 {
     double phi = atan2(-p.z(), p.x()) + pi;

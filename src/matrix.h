@@ -6,6 +6,7 @@
 
 #include <vector>
 
+// A representation of a 4x4 matrix.
 class matrix
 {
 public:
@@ -19,7 +20,6 @@ public:
     static matrix rotation_from_quaternion(quaternion q);
 
 private:
-    int row_count, col_count;
     double data[4][4];
 };
 

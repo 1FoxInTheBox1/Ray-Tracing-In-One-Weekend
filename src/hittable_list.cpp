@@ -10,6 +10,7 @@ void hittable_list::add(shared_ptr<hittable> object)
     objects.push_back(object);
 }
 
+// Compare the ray with all objects in the list to determine if any of them were hit
 bool hittable_list::hit(const ray &r, interval ray_t, hit_record &rec) const
 {
     hit_record temp_rec;
@@ -38,6 +39,11 @@ shared_ptr<hittable> hittable_list::get(int i) const
     return objects[i];
 }
 
+// Returns the bounding box that encompasses all objects in the list
+// 
+// TODO: This is recalculated each time this function is run. 
+// Since we cannot add new objects once the app is run, it would be nice to
+// calculate this only once then return that result on subsequent calls
 aabb hittable_list::get_bounding_box()
 {
     aabb bounds;

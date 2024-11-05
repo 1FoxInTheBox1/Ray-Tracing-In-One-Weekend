@@ -2,6 +2,8 @@
 
 metal::metal(const color &albedo, double fuzz) : albedo(albedo), fuzz(fuzz < 1 ? fuzz : 1) {}
 
+// Metallic materials reflect light according to their "fuzz" factor
+// Less fuzz = clearer reflections
 bool metal::scatter(const ray &r_in, const hit_record &rec, 
                     color &attenuation, ray &scattered) const
 {

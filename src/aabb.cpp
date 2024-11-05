@@ -4,6 +4,7 @@
 aabb::aabb() : min(inf_vector()), max(-inf_vector()) {}
 aabb::aabb(const vec3 &min, const vec3 &max) : min(min), max(max) {}
 
+// Expands the min and max of the aabb to include the point p
 void aabb::growToInclude(const vec3 &p)
 {
     min = min_vector(min, p);

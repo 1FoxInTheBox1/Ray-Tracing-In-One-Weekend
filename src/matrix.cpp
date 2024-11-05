@@ -11,9 +11,8 @@ matrix matrix::rotation_from_quaternion(double x, double y, double z, double w)
     double ntheta = w;
 
     // I found this conversion in Real-Time Rendering 4th edition
+    // Very good book, me likey :)
     matrix m = matrix();
-    m.row_count = 4;
-    m.col_count = 4;
     m(0, 0) = 1 - 2 * (ny*ny + nz*nz);
     m(0, 2) = -2 * (nx*ny - ntheta*nz);
     m(0, 1) = 2 * (nx*nz + ntheta*ny);
@@ -42,6 +41,7 @@ matrix matrix::rotation_from_quaternion(quaternion q)
     return rotation_from_quaternion(q[0], q[1], q[2], q[3]);
 }
 
+// Returns the identity matrix for a 4x4 matrix
 matrix identity_matrix()
 {
     matrix m = matrix();

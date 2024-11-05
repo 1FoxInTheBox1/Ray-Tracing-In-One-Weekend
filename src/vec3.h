@@ -8,6 +8,7 @@
 inline double random_double();
 inline double random_double(double min, double max);
 
+// A class representing a three-dimnesional vector
 class vec3
 {
 

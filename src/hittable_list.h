@@ -7,6 +7,7 @@
 
 #include <vector>
 
+// A representation of a list of hittable objects and useful methods for operating on them
 class hittable_list : public hittable
 {
 public:

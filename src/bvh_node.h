@@ -5,6 +5,7 @@
 #include "hittable_list.h"
 #include "interval.h"
 
+// A representation of a node of a BVH tree
 class bvh_node : public hittable
 {
 public:

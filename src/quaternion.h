@@ -3,6 +3,7 @@
 
 #include "rtweekend.h"
 
+// A representation of a four-dimensional quaternion
 class quaternion
 {
 public:

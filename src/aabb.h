@@ -7,7 +7,7 @@
 class interval;
 
 // AABB stands for Axis-Aligned Bounding Box.
-// They are used to implement BVH, a method for
+// They are used to implement BVH trees, a method for
 // increasing the performance of the ray tracer.
 class aabb
 {

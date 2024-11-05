@@ -21,6 +21,7 @@ struct hit_record
 
 };
 
+// A representation of an object that light rays can collide and interact with
 class hittable
 {
 public:

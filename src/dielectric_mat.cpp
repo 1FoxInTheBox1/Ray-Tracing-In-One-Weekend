@@ -2,6 +2,8 @@
 
 dielectric::dielectric(double refraction_index) : refraction_index(refraction_index) {}
 
+// The Dielectric class represents a transparent material like glass or crystal
+// It's scatter() function must then account for refraction and reflection
 bool dielectric::scatter(const ray &r_in, const hit_record &rec, 
                             color &attenuation, ray &scattered) const
 {

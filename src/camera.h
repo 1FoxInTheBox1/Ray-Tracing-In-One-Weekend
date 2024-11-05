@@ -10,6 +10,7 @@
 #include <mutex> 
 #include <vector>
 
+// A representation of the scene's camera. Also contains rendering logic.
 class camera
 {
 public:

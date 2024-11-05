@@ -6,6 +6,7 @@
 #include "color.h"
 #include "ray.h"
 
+// An abstract class representing an object's material properties
 class material
 {
 public:

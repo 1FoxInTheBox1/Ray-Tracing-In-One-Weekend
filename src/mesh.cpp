@@ -20,6 +20,11 @@ aabb mesh::get_bounding_box()
     return triangles.get_bounding_box();
 }
 
+// Adds each triangle in the mesh to the hittable_list
+// This is done so that BVH construction can create nodes around
+// individual triangles rather than the whole mesh
+// Definitely a jank way of doing this, but it works for now
+// TODO: Make this less jank
 void mesh::add_to_list(hittable_list &list)
 {
     for (const auto &object : triangles.objects)

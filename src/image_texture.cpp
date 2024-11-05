@@ -10,6 +10,9 @@ image_texture::image_texture(const char *filename)
     }
 }
 
+// An image texture is a lambertian material that retrieves its color from an image.
+// This function uses a UV coordinate pair to get the color at the corresponding part of
+// the texture's image.
 color image_texture::get_color_at(const double &u, const double &v) const
 {
     interval width_range = interval(0, width);
@@ -25,12 +28,6 @@ color image_texture::get_color_at(const double &u, const double &v) const
     int r = c[0];
     int g = c[1];
     int b = c[2];
-    // double r = static_cast<double>(ri);
-    // double g = static_cast<double>(gi);
-    // double b = static_cast<double>(bi);
-    // std::cout << r << ", " << g << ", " << b << "\n";
-    // std::cout << x << ", " << y << "\n";
-    // std::cout << color(r, g, b) * (1.0/255.0) << "\n";
     return color(r, g, b) * (1.0/255.0);
 }
 

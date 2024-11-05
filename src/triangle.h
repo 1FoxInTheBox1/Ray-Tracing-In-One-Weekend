@@ -8,6 +8,7 @@
 const int epsilon = .00001;
 const interval validRange = interval(-epsilon, epsilon);
 
+// A class representing a triangle that can be rendered
 class triangle : public hittable
 {
 public:
@@ -21,7 +22,8 @@ public:
 private:
     point3 p0, p1, p2;
     // I use a vec3 to store the 2D texture coords because 
-    // I didn't want to make a vec2 class. Maybe I should just make a vec2 class
+    // I didn't want to make a vec2 class. 
+    // Maybe I should just make a vec2 class.
     // TODO: vec2 class
     vec3 tex_coord0, tex_coord1, tex_coord2;
     shared_ptr<material> mat;

@@ -47,7 +47,6 @@ bool triangle::hit (const ray &ray, interval ray_t, hit_record &rec) const
     }
 
     double t = f * dot(e2, r);
-    // std::cout << ray_t.min << " - " << ray_t.max << " t = "<< t << "\n";
     if (!ray_t.surrounds(t)) {
         return false;
     }
@@ -55,10 +54,6 @@ bool triangle::hit (const ray &ray, interval ray_t, hit_record &rec) const
     rec.t = t;
     rec.p = ray.at(rec.t);
     rec.set_face_normal(ray, unit_vector(cross(e1, e2)));
-    //std::cout << unit_vector(cross(e1, e2)) << "\n";
-    // std::cout << ray.direction() << " - " << rec.normal << "\n";
-    // rec.normal = unit_vector(cross(e1, e2));
-    // std::cout << u << " - " << v << "\n";
     rec.u = (1 - u - v) * tex_coord0.x() + u * tex_coord1.x() + v * tex_coord2.x();
     rec.v = (1 - u - v) * tex_coord0.y() + u * tex_coord1.y() + v * tex_coord2.y();
     rec.mat = mat;

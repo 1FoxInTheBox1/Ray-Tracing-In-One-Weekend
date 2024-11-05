@@ -4,6 +4,7 @@
 #include "hittable_list.h"
 #include "model_loader.h"
 
+// A representation of the collection of triangles that make up a mesh instance
 class mesh : public hittable
 {
 public:

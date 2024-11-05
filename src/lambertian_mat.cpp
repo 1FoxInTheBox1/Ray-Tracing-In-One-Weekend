@@ -3,6 +3,8 @@
 lambertian::lambertian(const color &albedo) : texture(make_shared<solid_color_texture>(albedo)) {}
 lambertian::lambertian(const char *filename) : texture(make_shared<image_texture>(filename)) {}
 
+// Lambertian materials scatter light (somewhat) randomly
+// This scatter() function simulates that
 bool lambertian::scatter(const ray &r_in, const hit_record &rec, 
                             color &attenuation, ray &scattered) const
 {

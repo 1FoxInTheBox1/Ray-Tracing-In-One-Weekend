@@ -11,6 +11,9 @@
 
 #include <chrono>
 
+// TODO: I put documentation comments in the .cpp files, 
+// find out if they should be moved
+
 void random_spheres(hittable_list &world)
 {
     for (int a = -11; a < 11; a++)

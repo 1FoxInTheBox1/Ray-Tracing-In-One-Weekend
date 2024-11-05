@@ -12,6 +12,8 @@ inline double linear_to_gamma(double linear_component)
     return 0;
 }
 
+// Writes the color pixel_color to out
+// TODO: Output to file formats other than .ppm
 void write_color(std::ostream &out, const color &pixel_color)
 {
     auto r = pixel_color.x();

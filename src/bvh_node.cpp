@@ -2,6 +2,7 @@
 
 bvh_node::bvh_node() {}
 
+// Expands the node to cover the object given as a parameter
 void bvh_node::grow_to_include(shared_ptr<hittable> object)
 {
     aabb object_bounds = object->get_bounding_box();
@@ -50,6 +51,8 @@ aabb bvh_node::get_bounding_box()
     return bounds;
 }
 
+// Splits the node into a left and right subnode
+// along the node's largest side
 void bvh_node::split(const int &max_depth)
 {
     // Stop splitting if we reached maximum depth

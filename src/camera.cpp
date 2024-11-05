@@ -39,6 +39,8 @@ void camera::render(const hittable &world)
     output_file.close();
 }
 
+// Runs a single thread. 
+// These threads write image data to the completed vector, which is later copied to the final image
 void camera::run_thread(const hittable &world, const int thread_num, std::vector<color> &completed)
 {
     int work_size = image_height / NUM_THREADS;
@@ -66,6 +68,8 @@ void camera::run_thread(const hittable &world, const int thread_num, std::vector
     }
 }
 
+// Shoots a single ray at the center of the screen
+// Just used for debugging
 void camera::fire_single_ray(const hittable &world)
 {
     initialize();
@@ -112,11 +116,10 @@ void camera::initialize()
     defocus_disk_v = v * defocus_radius;
 }
 
+// Construct a camera ray originating from the defocus disk and directed at randomly sampled
+// point around the pixel location i, j
 ray camera::get_ray(int i, int j) const
 {
-    // Construct a camera ray originating from the defocus disk and directed at randomly sampled
-    // point around the pixel location i, j
-
     // Get the randomly sampled point
     // We'll eventually call get_ray a bunch and average all those results
     // We do this to implement antialiasing
@@ -132,34 +135,32 @@ ray camera::get_ray(int i, int j) const
     return ray(ray_origin, ray_direction);
 }
 
+// Returns the vector to a random point in the [-.5, -.5]-[+.5,+.5] unit square
 vec3 camera::sample_square() const
 {
-    // Returns the vector to a random point in the [-.5, -.5]-[+.5,+.5] unit square
     return vec3(random_double() - 0.5, random_double() - 0.5, 0);
 }
 
+// Returns a random point in the camera defocus disk
 vec3 camera::defocus_disk_sample() const
 {
-    // Returns a random point in the camera defocus disk
     auto p = random_in_unit_disk();
     return center + (p[0] * defocus_disk_u) + (p[1] * defocus_disk_v);
 }
 
+// Determines the final color of a ray
+// A ray that reaches the depth limit return black
 color camera::ray_color(const ray &r, int depth, const hittable &world) const
 {
-    // std::cout << "Firing ray from " << r.origin() << " in direction " << r.direction() << "\n";
-
     // If we've exceeded the ray bounce limit, return black
     if (depth <= 0)
     {
-        // std::cout << "Hit depth limit\n";
         return color(0, 0, 0);
     }
 
     hit_record rec;
     if (world.hit(r, interval(0.001, infinity), rec))
     {
-        // std::cout << "Found hit at " << rec.p << " with t value " << rec.t << "\n";
         ray scattered;
         color attenuation;
         // If scatter() returns true then the ray was not absorbed
@@ -170,7 +171,6 @@ color camera::ray_color(const ray &r, int depth, const hittable &world) const
         return color(0, 0, 0);
     }
 
-    // std::cout << "Sent to bg \n";
     // Create background gradient with a linear interpolation
     vec3 unit_direction = unit_vector(r.direction());
     auto a = 0.5 * (unit_direction.y() + 1.0);

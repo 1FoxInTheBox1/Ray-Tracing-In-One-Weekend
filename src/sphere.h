@@ -5,6 +5,7 @@
 #include "interval.h"
 #include "aabb.h"
 
+// A class representing a sphere that can be rendered
 class sphere : public hittable
 {
 public:
