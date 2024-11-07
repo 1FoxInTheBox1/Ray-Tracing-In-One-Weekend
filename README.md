@@ -7,6 +7,4 @@ Since completing the book, I have implemented many additional features including
 - Transformations on meshes
 - Loading of albedo textures from images
 
-Some renders from the completed project:
-
 ![scene with many spheres and cubes](https://github.com/1FoxInTheBox1/Ray-Tracing-In-One-Weekend/blob/main/images/render5.png?raw=true)
