@@ -13,7 +13,7 @@
 
 // TODO: I put documentation comments in the .cpp files, 
 // find out if they should be moved
-void random_spheres(hittable_list &world)
+void random_objects(hittable_list &world)
 {
     for (int a = -11; a < 11; a++)
     {
@@ -102,24 +102,20 @@ void build_bvh(shared_ptr<bvh_node> &root, const hittable_list &world, int max_d
     root->split(max_depth);
 }
 
-int main()
+void build_scene(hittable_list &world) 
 {
-    // World Setup
-    std::cout << "Building Scene\n";
-    auto build_start = std::chrono::high_resolution_clock::now();
-
-    hittable_list world;
     auto material1 = make_shared<dielectric>(1.5);
     auto material2 = make_shared<lambertian>("images/earth.png");
     auto material3 = make_shared<metal>(color(1.0, 0.6, 0.5), 0.0);
     auto material4 = make_shared<lambertian>(color(0.5, 0.5, 0.5));
     auto material5 = make_shared<lambertian>(color(1.0, 0.0, 1.0));
 
-    auto cube1 = make_shared<mesh>("data/cube.txt", point3(0, 1, 0), vec3(1, 1, 1), quaternion(0, 0, 0), material2);
+    auto cube1 = make_shared<mesh>("data/teapot.obj", point3(4, .5, 0), vec3(.5, .5, .5), quaternion(0, 0, 0), material1);
+    // auto cube1 = make_shared<mesh>("data/cube.txt", point3(0, 1, 0), vec3(1, 1, 1), quaternion(0, 0, 0), material2);
     // auto cube1 = make_shared<mesh>("data/cube.txt", point3(0, 0, 0), vec3(1, 1, 1), quaternion(0, 0, 0), material2);
     // auto cube2 = make_shared<mesh>("data/cube.txt", point3(0, 0, 1.5), vec3(1, 1, 1), quaternion(0, 0, 0, 0), material2);
     auto cube2 = make_shared<mesh>("data/cube.txt", point3(-4, 1, 0), vec3(.5, 2, .5), quaternion(0, 0, 0), material3);
-    world.add(make_shared<sphere>(point3(4, 1, 0), 1.0, material1));
+    world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, material2));
     // auto cube3 = make_shared<mesh>("data/cube.txt", point3(4, 1, 0), vec3(2, 1, 2), quaternion(0, 0, 0), material1);
     auto cube4 = make_shared<mesh>("data/plane.txt", point3(0, 0, 0), vec3(10, 10, 10), quaternion(0, 0, 0), material4);
 
@@ -129,7 +125,18 @@ int main()
     cube4->add_to_list(world);
 
     // world.add(make_shared<sphere>(point3(1, 0, 0), .2, material5));
-    random_spheres(world);
+    random_objects(world);
+
+}
+
+int main()
+{
+    // World Setup
+    std::cout << "Building Scene\n";
+    auto build_start = std::chrono::high_resolution_clock::now();
+
+    hittable_list world;
+    build_scene(world);
 
     auto build_stop = std::chrono::high_resolution_clock::now();
     auto build_duration = std::chrono::duration_cast<std::chrono::milliseconds>(build_stop - build_start);
@@ -140,17 +147,17 @@ int main()
     auto bvh_start = std::chrono::high_resolution_clock::now();
 
     auto root = make_shared<bvh_node>();
-    build_bvh(root, world, 12);
+    build_bvh(root, world, 20);
 
     auto bvh_stop = std::chrono::high_resolution_clock::now();
     auto bvh_duration = std::chrono::duration_cast<std::chrono::milliseconds>(bvh_stop - bvh_start);
     std::cout << "BVH Construction complete in " << bvh_duration.count() << " milliseconds\n";
 
-// Camera Setup
+    // Camera Setup
     camera cam;
     cam.aspect_ratio = 16.0 / 9.0;
-    cam.image_width = 1200;
-    cam.samples_per_pixel = 500;
+    cam.image_width = 800;
+    cam.samples_per_pixel = 4;
     cam.max_depth = 50;
 
     // Camera Aiming
@@ -160,7 +167,7 @@ int main()
     cam.vup = vec3(0, 1, 0);
 
     // Defocus Blur settings
-    cam.defocus_angle = .6;
+    cam.defocus_angle = 0;
     cam.focus_dist = 10;
 
     // Render
