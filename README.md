@@ -7,8 +7,4 @@ I also implemented Bounding Volume Hierarchies, although I don't think they're i
 
 Some renders from the completed project:
 
-![scene with many spheres](https://github.com/1FoxInTheBox1/Ray-Tracing-In-One-Weekend/blob/main/images/render2.png?raw=true)
-
-![scene with cubes](https://github.com/1FoxInTheBox1/Ray-Tracing-In-One-Weekend/blob/main/images/render4.png?raw=true)
-
-![close up of textured spheres](https://github.com/1FoxInTheBox1/Ray-Tracing-In-One-Weekend/blob/main/images/render3.png?raw=true)
+![scene with many spheres and cubes](https://github.com/1FoxInTheBox1/Ray-Tracing-In-One-Weekend/blob/main/images/render5.png?raw=true)
