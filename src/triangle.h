@@ -25,6 +25,7 @@ private:
     // I didn't want to make a vec2 class. 
     // Maybe I should just make a vec2 class.
     // TODO: vec2 class
+    vec3 e1, e2, normal;
     vec3 tex_coord0, tex_coord1, tex_coord2;
     shared_ptr<material> mat;
 };

@@ -19,7 +19,7 @@ public:
     int samples_per_pixel = 10; // Count of random samples for each pixel
     int max_depth = 10;         // Maximum number of ray bounces
     int lines_remaining = 0;    // Number of horizontal lines that must stil be rendered
-    std::mutex cam_mtx;
+    std::mutex cam_mtx;         // Mutex for synchronizing threads
 
     double vfov = 90;                  // Vertical view angle (field of view)
     point3 lookfrom = point3(0, 0, 0); // Point camera is looking from

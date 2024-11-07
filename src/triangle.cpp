@@ -3,7 +3,7 @@
 triangle::triangle(const point3 &p0, const point3 &p1, const point3 &p2, shared_ptr<material> mat)
                     : p0(p0), p1(p1), p2(p2), mat(mat), 
                     tex_coord0(vec3(0, 0, 0)), tex_coord1(vec3(1, 0, 0)), tex_coord2(vec3(0, 1, 0)),
-                    hittable((p0 + p1 + p2) / 3) {}
+                    hittable((p0 + p1 + p2) / 3), e1(p1 - p0), e2(p2 - p0), normal(unit_vector(cross(e1, e2))) {}
 
 triangle::triangle(const point3 &p0, const point3 &p1, const point3 &p2, 
                     const point3 &tex_coord0, const point3 &tex_coord1, const point3 &tex_coord2, 
@@ -12,15 +12,13 @@ triangle::triangle(const point3 &p0, const point3 &p1, const point3 &p2,
                     tex_coord0(min_vector(max_vector(tex_coord0, vec3(0, 0, 0)), vec3(1,1,1))), 
                     tex_coord1(min_vector(max_vector(tex_coord1, vec3(0, 0, 0)), vec3(1,1,1))), 
                     tex_coord2(min_vector(max_vector(tex_coord2, vec3(0, 0, 0)), vec3(1,1,1))),
-                    mat(mat), hittable((p0 + p1 + p2) / 3) {}
+                    mat(mat), hittable((p0 + p1 + p2) / 3), e1(p1 - p0), e2(p2 - p0), normal(unit_vector(cross(e1, e2))) {}
 
 bool triangle::hit (const ray &ray, interval ray_t, hit_record &rec) const
 {
-    // TODO: store some values and check for speed
-
     // This code adapted from pseudocode from Realtime Rendering 4th Edition
-    vec3 e1 = p1 - p0;
-    vec3 e2 = p2 - p0;
+    // It utilizes barycentric coordinates to determine the intersection point
+    // e1, e2, and normal are calculated when the triangle is created
     vec3 q = cross(ray.direction(), e2);
     double det = dot(e1, q);
 
@@ -53,7 +51,7 @@ bool triangle::hit (const ray &ray, interval ray_t, hit_record &rec) const
 
     rec.t = t;
     rec.p = ray.at(rec.t);
-    rec.set_face_normal(ray, unit_vector(cross(e1, e2)));
+    rec.set_face_normal(ray, normal);
     rec.u = (1 - u - v) * tex_coord0.x() + u * tex_coord1.x() + v * tex_coord2.x();
     rec.v = (1 - u - v) * tex_coord0.y() + u * tex_coord1.y() + v * tex_coord2.y();
     rec.mat = mat;

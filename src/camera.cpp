@@ -3,7 +3,7 @@
 void camera::render(const hittable &world)
 {
     initialize();
-
+    
     // Set up output file
     std::ofstream output_file;
     output_file.open("out.ppm");
@@ -44,7 +44,7 @@ void camera::render(const hittable &world)
 void camera::run_thread(const hittable &world, const int thread_num, std::vector<color> &completed)
 {
     int work_size = image_height / NUM_THREADS;
-    int work_height = work_size;
+    int work_start = work_size;
     work_size += (thread_num % NUM_THREADS == NUM_THREADS - 1) ? image_height % work_size : 0;
     // Render
     for (int j = 0; j < work_size; j++)
@@ -53,6 +53,7 @@ void camera::run_thread(const hittable &world, const int thread_num, std::vector
         lines_remaining--;
         std::clog << "\rScanlines remaining: " << lines_remaining << ' ' << std::flush;
         cam_mtx.unlock();
+        // auto render_start = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < image_width; i++)
         {
             color pixel_color(0, 0, 0);
@@ -60,11 +61,14 @@ void camera::run_thread(const hittable &world, const int thread_num, std::vector
             // average the results to determine the final displayed color
             for (int sample = 0; sample < samples_per_pixel; sample++)
             {
-                ray r = get_ray(i, j + (work_height * thread_num));
+                ray r = get_ray(i, j + (work_start * thread_num));
                 pixel_color += ray_color(r, max_depth, world);
             }
             completed.push_back(pixel_samples_scale * pixel_color);
         }
+        // auto render_stop = std::chrono::high_resolution_clock::now();
+        // auto render_duration = std::chrono::duration_cast<std::chrono::milliseconds>(render_stop - render_start);
+        // std::cout << "Scanline " << j << " took " << render_duration.count() << " milliseconds\n";
     }
 }
 
@@ -159,16 +163,19 @@ color camera::ray_color(const ray &r, int depth, const hittable &world) const
     }
 
     hit_record rec;
+
     if (world.hit(r, interval(0.001, infinity), rec))
     {
         ray scattered;
         color attenuation;
+
         // If scatter() returns true then the ray was not absorbed
         if (rec.mat->scatter(r, rec, attenuation, scattered))
             // We recursively determine the color of the scattered ray to determine the color of this ray
             return attenuation * ray_color(scattered, depth - 1, world);
         // An absorbed ray obviously won't produce any color, so we return black
         return color(0, 0, 0);
+
     }
 
     // Create background gradient with a linear interpolation
