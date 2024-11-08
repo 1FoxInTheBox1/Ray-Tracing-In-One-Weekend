@@ -87,12 +87,12 @@ inline vec3 operator*(const vec3 &v, double t)
 
 inline vec3 operator*(const matrix &m, const vec3 &v)
 {
-    vec3 result;
-    for (int i = 0; i < 3; i++)
-    {
-        result[i] = m(i, 0) * v[0] + m(i, 1) * v[1] + m(i, 2) * v[2];
-    }
-    return result;
+  vec3 result;
+  for (int i = 0; i < 3; i++)
+  {
+    result[i] = m(i, 0) * v[0] + m(i, 1) * v[1] + m(i, 2) * v[2];
+  }
+  return result;
 }
 
 inline vec3 operator/(const vec3 &v, double t)

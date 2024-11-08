@@ -7,7 +7,7 @@
 
 #include <fstream>
 #include <thread>
-#include <mutex> 
+#include <mutex>
 #include <vector>
 
 // A representation of the scene's camera. Also contains rendering logic.
@@ -41,7 +41,7 @@ private:
     vec3 sample_square() const;
     vec3 defocus_disk_sample() const;
     color ray_color(const ray &r, int depth, const hittable &world) const;
-    
+
 private:
     int image_height;           // Rendered image height
     double pixel_samples_scale; // Color scale factor for a sum of pixel samples
@@ -52,7 +52,6 @@ private:
     vec3 u, v, w;               // Camera frame basis vectors
     vec3 defocus_disk_u;        // Defocus disk horizontal radius
     vec3 defocus_disk_v;        // Defocus disk vertical radius
-    
 };
 
 #endif

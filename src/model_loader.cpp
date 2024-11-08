@@ -12,14 +12,13 @@ void load_file(const char *filename, point3 position, vec3 scale, quaternion rot
     if (filePath.extension().compare(".txt") == 0)
     {
         vertices_from_txt(filename, vertices, tex_coords, position, scale, rotation);
-    } 
+    }
     else if (filePath.extension().compare(".obj") == 0)
     {
         vertices_from_obj(filename, vertices, tex_coords, position, scale, rotation);
     }
 
     make_triangles(vertices, tex_coords, mat, tri_list);
-
 }
 
 // Loads vertices from a .txt file
@@ -27,10 +26,10 @@ void vertices_from_txt(const char *filename, std::vector<vec3> &vertices, std::v
 {
     ifstream file(filename);
     string fileOut;
-    while (getline(file, fileOut)) 
+    while (getline(file, fileOut))
     {
         vector<string> coordList = split_string(fileOut, ' ');
-        
+
         // Load and transform vertex
         vec3 vertex = vec3(atof(coordList[0].data()), atof(coordList[2].data()), -atof(coordList[1].data()));
         vertex *= scale;
@@ -38,11 +37,11 @@ void vertices_from_txt(const char *filename, std::vector<vec3> &vertices, std::v
         vertex += position;
 
         // If the file contains texture coordinates then load those as well
-        if (coordList.size() >= 5) 
+        if (coordList.size() >= 5)
         {
             vec3 tex_coord = vec3(atof(coordList[3].data()), atof(coordList[4].data()), 0.0);
             tex_coords.push_back(tex_coord);
-        } 
+        }
 
         vertices.push_back(vertex);
     }
@@ -56,7 +55,7 @@ void vertices_from_obj(const char *filename, std::vector<vec3> &vertices_out, st
     ifstream file(filename);
     string fileOut;
     std::vector<vec3> vertex_list;
-    while (getline(file, fileOut)) 
+    while (getline(file, fileOut))
     {
         if (fileOut[0] != '#' && fileOut.length() != 0)
         {
@@ -96,18 +95,18 @@ void vertices_from_obj(const char *filename, std::vector<vec3> &vertices_out, st
 
 // Create triangles from the vertices list
 // Note that texture coords are optional,
-// and that we do not need to load normals 
+// and that we do not need to load normals
 // since we calculate those ourselves
 void make_triangles(std::vector<vec3> &vertices, std::vector<vec3> &tex_coords, shared_ptr<material> mat, hittable_list &tri_list)
 {
-    for (int i = 0; i < vertices.size(); i += 3) 
+    for (int i = 0; i < vertices.size(); i += 3)
     {
         shared_ptr<triangle> tri;
-        if (!tex_coords.empty()) 
+        if (!tex_coords.empty())
         {
-            tri = make_shared<triangle>(vertices[i], vertices[i + 1], vertices[i + 2], 
-                                                tex_coords[i], tex_coords[i + 1], tex_coords[i + 2], mat);
-        } 
+            tri = make_shared<triangle>(vertices[i], vertices[i + 1], vertices[i + 2],
+                                        tex_coords[i], tex_coords[i + 1], tex_coords[i + 2], mat);
+        }
         else
         {
             tri = make_shared<triangle>(vertices[i], vertices[i + 1], vertices[i + 2], mat);
@@ -123,7 +122,7 @@ vector<string> split_string(string s, char c)
     string segment;
     vector<string> seglist;
 
-    while(getline(stream, segment, c))
+    while (getline(stream, segment, c))
     {
         // cout << segment << ", ";
         seglist.push_back(segment);

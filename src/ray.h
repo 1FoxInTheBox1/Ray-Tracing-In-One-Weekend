@@ -3,7 +3,7 @@
 
 #include "vec3.h"
 
-// A class representing a ray, 
+// A class representing a ray,
 // mainly used to represent light rays
 class ray
 {

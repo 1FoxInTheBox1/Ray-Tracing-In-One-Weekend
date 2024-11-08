@@ -5,8 +5,8 @@ lambertian::lambertian(const char *filename) : texture(make_shared<image_texture
 
 // Lambertian materials scatter light (somewhat) randomly
 // This scatter() function simulates that
-bool lambertian::scatter(const ray &r_in, const hit_record &rec, 
-                            color &attenuation, ray &scattered) const
+bool lambertian::scatter(const ray &r_in, const hit_record &rec,
+                         color &attenuation, ray &scattered) const
 {
     auto scatter_direction = rec.normal + random_unit_vector();
 

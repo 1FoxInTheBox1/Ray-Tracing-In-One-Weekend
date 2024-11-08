@@ -9,8 +9,8 @@ class dielectric : public material
 public:
     dielectric(double refraction_index);
 
-    bool scatter(const ray &r_in, const hit_record &rec, 
-                    color &attenuation, ray &scattered) const override;
+    bool scatter(const ray &r_in, const hit_record &rec,
+                 color &attenuation, ray &scattered) const override;
 
 private:
     // Use Schlick's approximation for reflectance

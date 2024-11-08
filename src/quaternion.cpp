@@ -3,7 +3,7 @@
 quaternion::quaternion() {};
 quaternion::quaternion(double x, double y, double z, double w) : e{x, y, z, w} {};
 // Create quaternion from euler angles
-quaternion::quaternion(double roll, double pitch, double yaw) 
+quaternion::quaternion(double roll, double pitch, double yaw)
 {
     double cr = cos(0.5 * roll);
     double sr = sin(0.5 * roll);
@@ -18,12 +18,12 @@ quaternion::quaternion(double roll, double pitch, double yaw)
     e[3] = cr * cp * cy + sr * sp * sy;
 };
 
-// Returns a new quaternion that is the normalized version 
+// Returns a new quaternion that is the normalized version
 // of the quaternion this was called on
 quaternion quaternion::to_unit_quaternion()
 {
     double theta = e[3] / 2.0;
-    double s = sqrt(e[0]*e[0] + e[1]*e[1] + e[2]*e[2] + theta*theta);
+    double s = sqrt(e[0] * e[0] + e[1] * e[1] + e[2] * e[2] + theta * theta);
     double nx = e[0] / s;
     double ny = e[1] / s;
     double nz = e[2] / s;

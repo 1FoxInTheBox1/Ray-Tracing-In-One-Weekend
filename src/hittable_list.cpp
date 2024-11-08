@@ -40,14 +40,15 @@ shared_ptr<hittable> hittable_list::get(int i) const
 }
 
 // Returns the bounding box that encompasses all objects in the list
-// 
-// TODO: This is recalculated each time this function is run. 
+//
+// TODO: This is recalculated each time this function is run.
 // Since we cannot add new objects once the app is run, it would be nice to
 // calculate this only once then return that result on subsequent calls
 aabb hittable_list::get_bounding_box()
 {
     aabb bounds;
-    for (const auto &object : objects) {
+    for (const auto &object : objects)
+    {
         aabb object_bounds = object->get_bounding_box();
         bounds.growToInclude(object_bounds.min);
         bounds.growToInclude(object_bounds.max);

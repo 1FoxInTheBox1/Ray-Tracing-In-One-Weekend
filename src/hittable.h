@@ -18,7 +18,6 @@ struct hit_record
     bool front_face;
 
     void set_face_normal(const ray &r, const vec3 &outward_normal);
-
 };
 
 // A representation of an object that light rays can collide and interact with

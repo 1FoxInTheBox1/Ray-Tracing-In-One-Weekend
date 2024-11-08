@@ -28,7 +28,7 @@ color image_texture::get_color_at(const double &u, const double &v) const
     int r = c[0];
     int g = c[1];
     int b = c[2];
-    return color(r, g, b) * (1.0/255.0);
+    return color(r, g, b) * (1.0 / 255.0);
 }
 
 image_texture::~image_texture()

@@ -11,7 +11,7 @@
 
 #include <chrono>
 
-// TODO: I put documentation comments in the .cpp files, 
+// TODO: I put documentation comments in the .cpp files,
 // find out if they should be moved
 void random_objects(hittable_list &world)
 {
@@ -36,8 +36,8 @@ void random_objects(hittable_list &world)
                     if (choose_mesh <= .5)
                     {
                         world.add(make_shared<sphere>(center, 0.2, mesh_material));
-                    } 
-                    else 
+                    }
+                    else
                     {
                         auto cube = make_shared<mesh>("data/cube.txt", center, vec3(0.2, 0.2, 0.2), quaternion(0, 0, 0), mesh_material);
                         cube->add_to_list(world);
@@ -52,8 +52,8 @@ void random_objects(hittable_list &world)
                     if (choose_mesh <= .5)
                     {
                         world.add(make_shared<sphere>(center, 0.2, mesh_material));
-                    } 
-                    else 
+                    }
+                    else
                     {
                         auto cube = make_shared<mesh>("data/cube.txt", center, vec3(0.2, 0.2, 0.2), quaternion(0, 0, 0), mesh_material);
                         cube->add_to_list(world);
@@ -65,8 +65,8 @@ void random_objects(hittable_list &world)
                     if (choose_mesh <= .5)
                     {
                         world.add(make_shared<sphere>(center, 0.2, mesh_material));
-                    } 
-                    else 
+                    }
+                    else
                     {
                         auto cube = make_shared<mesh>("data/cube.txt", center, vec3(0.2, 0.2, 0.2), quaternion(0, 0, 0), mesh_material);
                         cube->add_to_list(world);
@@ -79,8 +79,8 @@ void random_objects(hittable_list &world)
                     if (choose_mesh <= .5)
                     {
                         world.add(make_shared<sphere>(center, 0.2, mesh_material));
-                    } 
-                    else 
+                    }
+                    else
                     {
                         auto cube = make_shared<mesh>("data/cube.txt", center, vec3(0.2, 0.2, 0.2), quaternion(0, 0, 0), mesh_material);
                         cube->add_to_list(world);
@@ -102,7 +102,7 @@ void build_bvh(shared_ptr<bvh_node> &root, const hittable_list &world, int max_d
     root->split(max_depth);
 }
 
-void build_scene(hittable_list &world) 
+void build_scene(hittable_list &world)
 {
     auto material1 = make_shared<dielectric>(1.5);
     auto material2 = make_shared<lambertian>("images/earth.png");
@@ -126,7 +126,6 @@ void build_scene(hittable_list &world)
 
     // world.add(make_shared<sphere>(point3(1, 0, 0), .2, material5));
     random_objects(world);
-
 }
 
 int main()
@@ -140,52 +139,21 @@ int main()
 
     auto build_stop = std::chrono::high_resolution_clock::now();
     auto build_duration = std::chrono::duration_cast<std::chrono::milliseconds>(build_stop - build_start);
-    std::cout << "Built scene in " <<build_duration.count() << " milliseconds\n With " << world.size() << " objects\n";
+    std::cout << "Built scene in " << build_duration.count() << " milliseconds\n With " << world.size() << " objects\n";
 
     // Build BVH
+    // TODO: BVH creates lots of extra nodes
     std::cout << "Building BVH\n";
     auto bvh_start = std::chrono::high_resolution_clock::now();
 
     auto root = make_shared<bvh_node>();
-    build_bvh(root, world, 20);
+    build_bvh(root, world, 1000);
 
     auto bvh_stop = std::chrono::high_resolution_clock::now();
     auto bvh_duration = std::chrono::duration_cast<std::chrono::milliseconds>(bvh_stop - bvh_start);
     std::cout << "BVH Construction complete in " << bvh_duration.count() << " milliseconds\n";
 
     // Camera Setup
-    camera cam;
-    cam.aspect_ratio = 16.0 / 9.0;
-    cam.image_width = 800;
-    cam.samples_per_pixel = 4;
-    cam.max_depth = 50;
-
-    // Camera Aiming
-    cam.vfov = 20;
-    cam.lookfrom = point3(13, 2, 6);
-    cam.lookat = point3(0, 0, 0);
-    cam.vup = vec3(0, 1, 0);
-
-    // Defocus Blur settings
-    cam.defocus_angle = 0;
-    cam.focus_dist = 10;
-
-    // Render
-    std::cout << "Beginning Rendering\n";
-    auto render_start = std::chrono::high_resolution_clock::now();
-
-    cam.render(hittable_list(root));
-    // cam.fire_single_ray(hittable_list(root)); 
-
-    auto render_stop = std::chrono::high_resolution_clock::now();
-    auto render_duration = std::chrono::duration_cast<std::chrono::milliseconds>(render_stop - render_start);
-    std::cout << "Rendering complete in " << render_duration.count() << " milliseconds\nPress enter to exit\n";
-    std::cin.get();
-}
-
-/*
-
-// Camera Setup
     camera cam;
     cam.aspect_ratio = 16.0 / 9.0;
     cam.image_width = 1200;
@@ -202,4 +170,15 @@ int main()
     cam.defocus_angle = .6;
     cam.focus_dist = 10;
 
-*/
+    // Render
+    std::cout << "Beginning Rendering\n";
+    auto render_start = std::chrono::high_resolution_clock::now();
+
+    cam.render(hittable_list(root));
+    // cam.fire_single_ray(hittable_list(root));
+
+    auto render_stop = std::chrono::high_resolution_clock::now();
+    auto render_duration = std::chrono::duration_cast<std::chrono::milliseconds>(render_stop - render_start);
+    std::cout << "Rendering complete in " << render_duration.count() << " milliseconds\nPress enter to exit\n";
+    std::cin.get();
+}

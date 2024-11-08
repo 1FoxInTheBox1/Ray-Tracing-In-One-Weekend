@@ -3,7 +3,7 @@
 void camera::render(const hittable &world)
 {
     initialize();
-    
+
     // Set up output file
     std::ofstream output_file;
     output_file.open("out.ppm");
@@ -14,12 +14,12 @@ void camera::render(const hittable &world)
     std::thread threads[NUM_THREADS];
     std::vector<color> completed[NUM_THREADS];
     lines_remaining = image_height;
-    for (int i = 0; i < NUM_THREADS; i++) 
+    for (int i = 0; i < NUM_THREADS; i++)
     {
         completed[i] = std::vector<color>();
         threads[i] = std::thread(&camera::run_thread, this, std::ref(world), i, std::ref(completed[i]));
     }
-    
+
     // Join threads
     for (int i = 0; i < NUM_THREADS; i++)
     {
@@ -39,7 +39,7 @@ void camera::render(const hittable &world)
     output_file.close();
 }
 
-// Runs a single thread. 
+// Runs a single thread.
 // These threads write image data to the completed vector, which is later copied to the final image
 void camera::run_thread(const hittable &world, const int thread_num, std::vector<color> &completed)
 {
@@ -175,7 +175,6 @@ color camera::ray_color(const ray &r, int depth, const hittable &world) const
             return attenuation * ray_color(scattered, depth - 1, world);
         // An absorbed ray obviously won't produce any color, so we return black
         return color(0, 0, 0);
-
     }
 
     // Create background gradient with a linear interpolation

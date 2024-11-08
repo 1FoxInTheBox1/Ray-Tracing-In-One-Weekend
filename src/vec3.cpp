@@ -57,24 +57,27 @@ void vec3::rotate(const quaternion &q)
     e[2] = rotated[2];
 }
 
-vec3 inf_vector() {
-  return vec3(infinity, infinity, infinity);
+vec3 inf_vector()
+{
+    return vec3(infinity, infinity, infinity);
 }
 
-vec3 min_vector(const vec3 &a, const vec3 &b) {
-  vec3 result = vec3();
-  a.x() < b.x() ? result[0] = a.x() : result[0] = b.x();
-  a.y() < b.y() ? result[1] = a.y() : result[1] = b.y();
-  a.z() < b.z() ? result[2] = a.z() : result[2] = b.z();
-  return result;
+vec3 min_vector(const vec3 &a, const vec3 &b)
+{
+    vec3 result = vec3();
+    a.x() < b.x() ? result[0] = a.x() : result[0] = b.x();
+    a.y() < b.y() ? result[1] = a.y() : result[1] = b.y();
+    a.z() < b.z() ? result[2] = a.z() : result[2] = b.z();
+    return result;
 }
 
-vec3 max_vector(const vec3 &a, const vec3 &b) {
-  vec3 result = vec3();
-  a.x() > b.x() ? result[0] = a.x() : result[0] = b.x();
-  a.y() > b.y() ? result[1] = a.y() : result[1] = b.y();
-  a.z() > b.z() ? result[2] = a.z() : result[2] = b.z();
-  return result;
+vec3 max_vector(const vec3 &a, const vec3 &b)
+{
+    vec3 result = vec3();
+    a.x() > b.x() ? result[0] = a.x() : result[0] = b.x();
+    a.y() > b.y() ? result[1] = a.y() : result[1] = b.y();
+    a.z() > b.z() ? result[2] = a.z() : result[2] = b.z();
+    return result;
 }
 
 vec3 to_euler_angles(const quaternion &q)

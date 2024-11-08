@@ -32,7 +32,8 @@ bool bvh_node::hit(const ray &r, interval ray_t, hit_record &rec) const
     return hit_left || hit_right;
 }
 
-void bvh_node::print_bounds() {
+void bvh_node::print_bounds()
+{
     std::cout << "Lower corner at " << bounds.min << " and greater corner at " << bounds.max << "\n";
 }
 
