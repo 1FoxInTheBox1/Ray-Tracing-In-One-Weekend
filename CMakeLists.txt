@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(RayTracing VERSION 1.1)
+project(RayTracing VERSION 1.0)
 
 add_executable(${PROJECT_NAME} src/main.cpp)
 
@@ -47,5 +47,7 @@ target_sources(${PROJECT_NAME}
     src/model_loader.cpp
     src/mesh.h
     src/mesh.cpp
+    src/mesh_instance.h
+    src/mesh_instance.cpp
     external/stb_image.h
     )

@@ -8,11 +8,36 @@
 #include "bvh_node.h"
 #include "model_loader.h"
 #include "matrix.h"
+#include "mesh_instance.h"
 
 #include <chrono>
 
 // TODO: I put documentation comments in the .cpp files,
 // find out if they should be moved
+
+// TODO: Find a good spot for these
+auto pot = make_shared<mesh>("data/teapot.obj");
+auto cube = make_shared<mesh>("data/cube.txt");
+auto plane = make_shared<mesh>("data/plane.txt");
+
+void add_test_mesh(double choose_mesh, point3 center, shared_ptr<material> mesh_material, hittable_list &world)
+{
+    if (choose_mesh <= .45)
+    {
+        world.add(make_shared<sphere>(center, 0.2, mesh_material));
+    }
+    else if (choose_mesh <= .9)
+    {
+        auto cube_instance = make_shared<mesh_instance>(cube, center, vec3(0.2, 0.2, 0.2), quaternion(0, 0, 0), mesh_material);
+        cube_instance->add_to_list(world);
+    }
+    else
+    {
+        auto pot_instance = make_shared<mesh_instance>(pot, center, vec3(0.1, 0.1, 0.1), quaternion(0, 0, 0), mesh_material);
+        pot_instance->add_to_list(world);
+    }
+}
+
 void random_objects(hittable_list &world)
 {
     for (int a = -11; a < 11; a++)
@@ -28,20 +53,12 @@ void random_objects(hittable_list &world)
             {
                 shared_ptr<material> mesh_material;
 
-                if (choose_mat < 0.6)
+                if (choose_mat < 0.5)
                 {
                     // Diffuse
                     auto albedo = color::random() * color::random();
                     mesh_material = make_shared<lambertian>(albedo);
-                    if (choose_mesh <= .5)
-                    {
-                        world.add(make_shared<sphere>(center, 0.2, mesh_material));
-                    }
-                    else
-                    {
-                        auto cube = make_shared<mesh>("data/cube.txt", center, vec3(0.2, 0.2, 0.2), quaternion(0, 0, 0), mesh_material);
-                        cube->add_to_list(world);
-                    }
+                    add_test_mesh(choose_mesh, center, mesh_material, world);
                 }
                 else if (choose_mat < 0.75)
                 {
@@ -49,42 +66,19 @@ void random_objects(hittable_list &world)
                     auto albedo = color::random(0.5, 1);
                     auto fuzz = random_double(0, 0.5);
                     mesh_material = make_shared<metal>(albedo, fuzz);
-                    if (choose_mesh <= .5)
-                    {
-                        world.add(make_shared<sphere>(center, 0.2, mesh_material));
-                    }
-                    else
-                    {
-                        auto cube = make_shared<mesh>("data/cube.txt", center, vec3(0.2, 0.2, 0.2), quaternion(0, 0, 0), mesh_material);
-                        cube->add_to_list(world);
-                    }
+                    add_test_mesh(choose_mesh, center, mesh_material, world);
                 }
                 else if (choose_mat < 0.9)
                 {
+                    // Albedo texture
                     mesh_material = make_shared<lambertian>("images/mars.png");
-                    if (choose_mesh <= .5)
-                    {
-                        world.add(make_shared<sphere>(center, 0.2, mesh_material));
-                    }
-                    else
-                    {
-                        auto cube = make_shared<mesh>("data/cube.txt", center, vec3(0.2, 0.2, 0.2), quaternion(0, 0, 0), mesh_material);
-                        cube->add_to_list(world);
-                    }
+                    add_test_mesh(choose_mesh, center, mesh_material, world);
                 }
                 else
                 {
                     // Dielectric
                     mesh_material = make_shared<dielectric>(1.5);
-                    if (choose_mesh <= .5)
-                    {
-                        world.add(make_shared<sphere>(center, 0.2, mesh_material));
-                    }
-                    else
-                    {
-                        auto cube = make_shared<mesh>("data/cube.txt", center, vec3(0.2, 0.2, 0.2), quaternion(0, 0, 0), mesh_material);
-                        cube->add_to_list(world);
-                    }
+                    add_test_mesh(choose_mesh, center, mesh_material, world);
                 }
             }
         }
@@ -110,19 +104,14 @@ void build_scene(hittable_list &world)
     auto material4 = make_shared<lambertian>(color(0.5, 0.5, 0.5));
     auto material5 = make_shared<lambertian>(color(1.0, 0.0, 1.0));
 
-    auto cube1 = make_shared<mesh>("data/teapot.obj", point3(4, .5, 0), vec3(.5, .5, .5), quaternion(0, 0, 0), material1);
-    // auto cube1 = make_shared<mesh>("data/cube.txt", point3(0, 1, 0), vec3(1, 1, 1), quaternion(0, 0, 0), material2);
-    // auto cube1 = make_shared<mesh>("data/cube.txt", point3(0, 0, 0), vec3(1, 1, 1), quaternion(0, 0, 0), material2);
-    // auto cube2 = make_shared<mesh>("data/cube.txt", point3(0, 0, 1.5), vec3(1, 1, 1), quaternion(0, 0, 0, 0), material2);
-    auto cube2 = make_shared<mesh>("data/cube.txt", point3(-4, 1, 0), vec3(.5, 2, .5), quaternion(0, 0, 0), material3);
+    auto pot_instance = make_shared<mesh_instance>(pot, point3(4, .5, 0), vec3(.5, .5, .5), quaternion(0, 0, 0), material1);
+    auto cube_instance = make_shared<mesh_instance>(cube, point3(-4, 1, 0), vec3(.5, 2, .5), quaternion(0, 0, 0), material3);
+    auto plane_instance = make_shared<mesh_instance>(plane, point3(0, 0, 0), vec3(10, 10, 10), quaternion(0, 0, 0), material4);
     world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, material2));
-    // auto cube3 = make_shared<mesh>("data/cube.txt", point3(4, 1, 0), vec3(2, 1, 2), quaternion(0, 0, 0), material1);
-    auto cube4 = make_shared<mesh>("data/plane.txt", point3(0, 0, 0), vec3(10, 10, 10), quaternion(0, 0, 0), material4);
 
-    cube1->add_to_list(world);
-    cube2->add_to_list(world);
-    // cube3->add_to_list(world);
-    cube4->add_to_list(world);
+    pot_instance->add_to_list(world);
+    cube_instance->add_to_list(world);
+    plane_instance->add_to_list(world);
 
     // world.add(make_shared<sphere>(point3(1, 0, 0), .2, material5));
     random_objects(world);
@@ -147,7 +136,7 @@ int main()
     auto bvh_start = std::chrono::high_resolution_clock::now();
 
     auto root = make_shared<bvh_node>();
-    build_bvh(root, world, 1000);
+    build_bvh(root, world, 21);
 
     auto bvh_stop = std::chrono::high_resolution_clock::now();
     auto bvh_duration = std::chrono::duration_cast<std::chrono::milliseconds>(bvh_stop - bvh_start);

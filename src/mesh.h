@@ -1,22 +1,19 @@
 #ifndef MESH_H
 #define MESH_H
 
+#include "rtweekend.h"
 #include "hittable_list.h"
 #include "model_loader.h"
+#include "lambertian_mat.h"
 
-// A representation of the collection of triangles that make up a mesh instance
-class mesh : public hittable
+// A representation of the collection of vertices that make up a mesh
+class mesh
 {
 public:
-    mesh(const char *filename, point3 position, vec3 scale, quaternion rotation, shared_ptr<material> mat);
-    mesh(const char *filename, point3 position, shared_ptr<material> mat);
-
-    bool hit(const ray &r, interval ray_t, hit_record &rec) const override;
-    aabb get_bounding_box();
-    void add_to_list(hittable_list &list);
-
-private:
-    hittable_list triangles;
+    std::vector<vec3> vertices;
+    std::vector<vec3> tex_coords;
+    
+    mesh(const char *filename);
 };
 
 #endif

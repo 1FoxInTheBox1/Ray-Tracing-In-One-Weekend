@@ -1,28 +1,22 @@
 #include "model_loader.h"
 using namespace std;
 
-// Loads triangles from the given file and places them into the hittable_list tri_list
-// TODO: Load from .obj files
-void load_file(const char *filename, point3 position, vec3 scale, quaternion rotation, hittable_list &tri_list, shared_ptr<material> mat)
+void load_file(const char *filename, vector<vec3> &vertices, vector<vec3> &tex_coords)
 {
-    vector<vec3> vertices;
-    vector<vec3> tex_coords;
     std::filesystem::path filePath = filename;
 
     if (filePath.extension().compare(".txt") == 0)
     {
-        vertices_from_txt(filename, vertices, tex_coords, position, scale, rotation);
+        vertices_from_txt(filename, vertices, tex_coords);
     }
     else if (filePath.extension().compare(".obj") == 0)
     {
-        vertices_from_obj(filename, vertices, tex_coords, position, scale, rotation);
+        vertices_from_obj(filename, vertices, tex_coords);
     }
-
-    make_triangles(vertices, tex_coords, mat, tri_list);
 }
 
 // Loads vertices from a .txt file
-void vertices_from_txt(const char *filename, std::vector<vec3> &vertices, std::vector<vec3> &tex_coords, point3 position, vec3 scale, quaternion rotation)
+void vertices_from_txt(const char *filename, std::vector<vec3> &vertices, std::vector<vec3> &tex_coords)
 {
     ifstream file(filename);
     string fileOut;
@@ -32,9 +26,6 @@ void vertices_from_txt(const char *filename, std::vector<vec3> &vertices, std::v
 
         // Load and transform vertex
         vec3 vertex = vec3(atof(coordList[0].data()), atof(coordList[2].data()), -atof(coordList[1].data()));
-        vertex *= scale;
-        vertex.rotate(rotation);
-        vertex += position;
 
         // If the file contains texture coordinates then load those as well
         if (coordList.size() >= 5)
@@ -50,7 +41,7 @@ void vertices_from_txt(const char *filename, std::vector<vec3> &vertices, std::v
 }
 
 // Loads vertices from a .obj file
-void vertices_from_obj(const char *filename, std::vector<vec3> &vertices_out, std::vector<vec3> &tex_coords, point3 position, vec3 scale, quaternion rotation)
+void vertices_from_obj(const char *filename, std::vector<vec3> &vertices_out, std::vector<vec3> &tex_coords)
 {
     ifstream file(filename);
     string fileOut;
@@ -64,9 +55,6 @@ void vertices_from_obj(const char *filename, std::vector<vec3> &vertices_out, st
             if (split_line[0].compare("v") == 0)
             {
                 vec3 vertex = vec3(atof(split_line[1].data()), atof(split_line[3].data()), -atof(split_line[2].data()));
-                vertex *= scale;
-                vertex.rotate(rotation);
-                vertex += position;
                 vertex_list.push_back(vertex);
             }
 
@@ -85,34 +73,7 @@ void vertices_from_obj(const char *filename, std::vector<vec3> &vertices_out, st
         }
     }
 
-    // for (vec3 vert : vertices_out)
-    // {
-    //     std:cout << vert << "\n";
-    // }
-
     file.close();
-}
-
-// Create triangles from the vertices list
-// Note that texture coords are optional,
-// and that we do not need to load normals
-// since we calculate those ourselves
-void make_triangles(std::vector<vec3> &vertices, std::vector<vec3> &tex_coords, shared_ptr<material> mat, hittable_list &tri_list)
-{
-    for (int i = 0; i < vertices.size(); i += 3)
-    {
-        shared_ptr<triangle> tri;
-        if (!tex_coords.empty())
-        {
-            tri = make_shared<triangle>(vertices[i], vertices[i + 1], vertices[i + 2],
-                                        tex_coords[i], tex_coords[i + 1], tex_coords[i + 2], mat);
-        }
-        else
-        {
-            tri = make_shared<triangle>(vertices[i], vertices[i + 1], vertices[i + 2], mat);
-        }
-        tri_list.add(tri);
-    }
 }
 
 // Splits a string s based on character c
