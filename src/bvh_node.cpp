@@ -66,25 +66,25 @@ void bvh_node::split(const int &max_depth)
     right = make_shared<bvh_node>();
 
     // Determine center of the parent aabb
-    int axis = -1;
-    double center = get_split_center(bounds, &axis);
+    int axis = get_split_axis();
+    double center = 0;
+
+    // Get average position of objects
+    for (const auto &object : get_objects().objects)
+    {
+        double object_pos = object->get_pos()[axis];
+        center += object_pos;
+    }
+    center /= get_objects().size();
 
     // Move objects to left or right child depending on which
     // side of the AABB they are on
     for (const auto &object : get_objects().objects)
     {
-        double object_pos = object->get_pos().x();
-        if (axis == 2)
-        {
-            object_pos = object->get_pos().z();
-        }
-        if (axis == 1)
-        {
-            object_pos = object->get_pos().y();
-        }
+        double object_pos = object->get_pos()[axis];
         if (axis == -1)
         {
-            std::cout << "An error occured while building the BVH";
+            std::cout << "An error occured while building the BVH\n";
             return;
         }
 
@@ -109,7 +109,7 @@ double bvh_node::midpoint(const double &a, const double &b)
     return (a + b) / 2.0;
 }
 
-double bvh_node::get_split_center(const aabb &bounds, int *axis)
+int bvh_node::get_split_axis()
 {
     double x_length = bounds.max.x() - bounds.min.x();
     double y_length = bounds.max.y() - bounds.min.y();
@@ -119,26 +119,22 @@ double bvh_node::get_split_center(const aabb &bounds, int *axis)
     {
         if (x_length > z_length)
         {
-            *axis = 0;
-            return midpoint(bounds.max.x(), bounds.min.x());
+            return 0;
         }
         else
         {
-            *axis = 2;
-            return midpoint(bounds.max.z(), bounds.min.z());
+            return 2;
         }
     }
     else
     {
         if (y_length > z_length)
         {
-            *axis = 1;
-            return midpoint(bounds.max.y(), bounds.min.y());
+            return 1;
         }
         else
         {
-            *axis = 2;
-            return midpoint(bounds.max.z(), bounds.min.z());
+            return 2;
         }
     }
 }

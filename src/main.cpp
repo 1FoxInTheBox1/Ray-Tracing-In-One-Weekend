@@ -113,7 +113,6 @@ void build_scene(hittable_list &world)
     cube_instance->add_to_list(world);
     plane_instance->add_to_list(world);
 
-    // world.add(make_shared<sphere>(point3(1, 0, 0), .2, material5));
     random_objects(world);
 }
 

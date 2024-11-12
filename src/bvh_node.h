@@ -23,7 +23,7 @@ public:
 
 private:
     double midpoint(const double &a, const double &b);
-    double get_split_center(const aabb &bounds, int *axis);
+    int get_split_axis();
 
 private:
     aabb bounds;
