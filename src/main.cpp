@@ -5,6 +5,7 @@
 #include "lambertian_mat.h"
 #include "metal_mat.h"
 #include "dielectric_mat.h"
+#include "emissive_mat.h"
 #include "bvh_node.h"
 #include "model_loader.h"
 #include "matrix.h"
@@ -103,18 +104,51 @@ void build_scene(hittable_list &world)
     auto material3 = make_shared<metal>(color(1.0, 0.6, 0.5), 0.0);
     auto material4 = make_shared<lambertian>(color(0.5, 0.5, 0.5));
     auto material5 = make_shared<lambertian>(color(1.0, 0.0, 1.0));
+    auto material6 = make_shared<emissive>(color(4.0, 0.0, 0.0));
+    auto material7 = make_shared<metal>(color(1.0, 1.0, 1.0), 0.01);
+    auto material8 = make_shared<emissive>(color(2.0, 2.0, 2.0));
+    auto material9 = make_shared<lambertian>(color(1.0, 1.0, 1.0));
+    auto material10 = make_shared<lambertian>("images/mark.png");
 
-    auto pot_instance = make_shared<mesh_instance>(pot, point3(4, .5, 0), vec3(.5, .5, .5), quaternion(0, 0, 0), material1);
-    auto cube_instance = make_shared<mesh_instance>(cube, point3(-4, 1, 0), vec3(.5, 2, .5), quaternion(0, 0, 0), material3);
-    auto plane_instance = make_shared<mesh_instance>(plane, point3(0, 0, 0), vec3(10, 10, 10), quaternion(0, 0, 0), material4);
-    world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, material2));
+    // auto pot_instance = make_shared<mesh_instance>(pot, point3(4, .5, 0), vec3(.5, .5, .5), quaternion(0, 0, 0), material1);
+    // auto cube_instance = make_shared<mesh_instance>(cube, point3(-4, 1, 0), vec3(.5, 2, .5), quaternion(0, 0, 0), material3);
+    // auto plane_instance = make_shared<mesh_instance>(plane, point3(0, 0, 0), vec3(10, 10, 10), quaternion(0, 0, 0), material4);
+    // world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, material2));
 
+    // pot_instance->add_to_list(world);
+    // cube_instance->add_to_list(world);
+    // plane_instance->add_to_list(world);
+
+    world.add(make_shared<triangle>(point3(2, -2, 2), point3(2, 2, 2), point3(2, 2, -2), material4));
+    world.add(make_shared<triangle>(point3(2, -2, 2), point3(2, 2, -2), point3(2, -2, -2), material4));
+
+    world.add(make_shared<triangle>(point3(-2, -2, 2), point3(-2, 2, 2), point3(-2, 2, -2), material4));
+    world.add(make_shared<triangle>(point3(-2, -2, 2), point3(-2, 2, -2), point3(-2, -2, -2), material4));
+
+    world.add(make_shared<triangle>(point3(2, -2, 2), point3(2, 2, 2), point3(-2, 2, 2), material7));
+    world.add(make_shared<triangle>(point3(2, -2, 2), point3(-2, 2, 2), point3(-2, -2, 2), material7));
+
+    world.add(make_shared<triangle>(point3(2, -2, -2), point3(2, 2, -2), point3(-2, 2, -2), material7));
+    world.add(make_shared<triangle>(point3(2, -2, -2), point3(-2, 2, -2), point3(-2, -2, -2), material7));
+
+    world.add(make_shared<triangle>(point3(2, -2, 2), point3(-2, -2, 2), point3(-2, -2, -2), material4));
+    world.add(make_shared<triangle>(point3(2, -2, 2), point3(-2, -2, -2), point3(2, -2, -2), material4));
+
+    world.add(make_shared<triangle>(point3(2, 2, 2), point3(-2, 2, 2), point3(-2, 2, -2), material4));
+    world.add(make_shared<triangle>(point3(2, 2, 2), point3(-2, 2, -2), point3(2, 2, -2), material4));
+
+    world.add(make_shared<triangle>(point3(.3, .299, .3), point3(-.3, .299, .3), point3(-.3, .299, -.3), material8));
+    world.add(make_shared<triangle>(point3(.3, .299, .3), point3(-.3, .299, -.3), point3(.3, .299, -.3), material8));
+
+    world.add(make_shared<sphere>(point3(-1, 0, 0), 0.25, material6));
+    world.add(make_shared<sphere>(point3(1.4, 0, 0), 0.3, material2));
+    auto pot_instance = make_shared<mesh_instance>(pot, point3(0, -1, 0), vec3(.2, .2, .2), quaternion(0, 0, 0), material9);
+    auto cube_instance = make_shared<mesh_instance>(cube, point3(-.4, 1, 0), vec3(.2, .2, .2), quaternion(30, 30, 30), material10);
     pot_instance->add_to_list(world);
     cube_instance->add_to_list(world);
-    plane_instance->add_to_list(world);
-
-    random_objects(world);
 }
+
+    // random_objects(world);
 
 int main()
 {
@@ -130,12 +164,11 @@ int main()
     std::cout << "Built scene in " << build_duration.count() << " milliseconds\n With " << world.size() << " objects\n";
 
     // Build BVH
-    // TODO: BVH creates lots of extra nodes
     std::cout << "Building BVH\n";
     auto bvh_start = std::chrono::high_resolution_clock::now();
 
     auto root = make_shared<bvh_node>();
-    build_bvh(root, world, 21);
+    build_bvh(root, world, 14);
 
     auto bvh_stop = std::chrono::high_resolution_clock::now();
     auto bvh_duration = std::chrono::duration_cast<std::chrono::milliseconds>(bvh_stop - bvh_start);
@@ -143,19 +176,19 @@ int main()
 
     // Camera Setup
     camera cam;
-    cam.aspect_ratio = 16.0 / 9.0;
-    cam.image_width = 1200;
-    cam.samples_per_pixel = 500;
+    cam.aspect_ratio = 1.0;
+    cam.image_width = 600;
+    cam.samples_per_pixel = 200;
     cam.max_depth = 50;
 
     // Camera Aiming
-    cam.vfov = 20;
-    cam.lookfrom = point3(13, 2, 6);
+    cam.vfov = 90;
+    cam.lookfrom = point3(0, 0, -1.99);
     cam.lookat = point3(0, 0, 0);
     cam.vup = vec3(0, 1, 0);
 
     // Defocus Blur settings
-    cam.defocus_angle = .6;
+    cam.defocus_angle = 0;
     cam.focus_dist = 10;
 
     // Render
@@ -168,5 +201,6 @@ int main()
     auto render_stop = std::chrono::high_resolution_clock::now();
     auto render_duration = std::chrono::duration_cast<std::chrono::milliseconds>(render_stop - render_start);
     std::cout << "Rendering complete in " << render_duration.count() << " milliseconds\nPress enter to exit\n";
+
     std::cin.get();
 }

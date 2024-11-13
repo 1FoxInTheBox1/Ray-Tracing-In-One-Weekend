@@ -13,7 +13,13 @@ public:
     virtual ~material() = default;
 
     virtual bool scatter(
-        const ray &r_in, const hit_record &rec, color &attnuation, ray &scattered) const = 0;
+        const ray &r_in, const hit_record &rec, color &attenuation, ray &scattered) const = 0;
+
+    virtual bool emit(
+        const ray &r_in, const hit_record &rec, color &attenuation, ray &emitted) const
+    {
+        return false;
+    }
 };
 
 #endif

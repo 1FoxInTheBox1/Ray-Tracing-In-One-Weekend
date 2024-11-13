@@ -17,6 +17,12 @@ target_sources(${PROJECT_NAME}
     src/color.cpp
     src/dielectric_mat.h
     src/dielectric_mat.cpp
+    src/lambertian_mat.h
+    src/lambertian_mat.cpp
+    src/metal_mat.h
+    src/metal_mat.cpp
+    src/emissive_mat.h
+    src/emissive_mat.cpp
     src/hittable_list.h
     src/hittable_list.cpp
     src/hittable.h
@@ -24,11 +30,7 @@ target_sources(${PROJECT_NAME}
     src/image_texture.cpp
     src/interval.h
     src/interval.cpp
-    src/lambertian_mat.h
-    src/lambertian_mat.cpp
     src/material.h
-    src/metal_mat.h
-    src/metal_mat.cpp
     src/ray.h
     src/ray.cpp
     src/solid_color_texture.cpp
