@@ -13,8 +13,7 @@ public:
 
     bool scatter(const ray &r_in, const hit_record &rec,
                  color &attenuation, ray &scattered) const override;
-    bool emit(const ray &r_in, const hit_record &rec,
-              color &attenuation, ray &emitted) const override;
+    bool emit(const hit_record &rec, color &attenuation) const override;
 
 private:
     shared_ptr<texture> texture;

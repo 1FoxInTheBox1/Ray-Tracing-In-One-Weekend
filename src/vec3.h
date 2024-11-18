@@ -2,8 +2,6 @@
 #define VEC3_H
 
 #include "rtweekend.h"
-#include "quaternion.h"
-#include "matrix.h"
 
 inline double random_double();
 inline double random_double(double min, double max);
@@ -33,7 +31,6 @@ public:
   double length() const;
   double length_squared() const;
   bool near_zero() const;
-  void rotate(const quaternion &q);
 
   static vec3 random()
   {
@@ -53,7 +50,6 @@ using point3 = vec3;
 vec3 inf_vector();
 vec3 min_vector(const vec3 &a, const vec3 &b);
 vec3 max_vector(const vec3 &a, const vec3 &b);
-vec3 to_euler_angles(const quaternion &q);
 
 inline std::ostream &operator<<(std::ostream &out, const vec3 &v)
 {
@@ -83,16 +79,6 @@ inline vec3 operator*(double t, const vec3 &v)
 inline vec3 operator*(const vec3 &v, double t)
 {
   return t * v;
-}
-
-inline vec3 operator*(const matrix &m, const vec3 &v)
-{
-  vec3 result;
-  for (int i = 0; i < 3; i++)
-  {
-    result[i] = m(i, 0) * v[0] + m(i, 1) * v[1] + m(i, 2) * v[2];
-  }
-  return result;
 }
 
 inline vec3 operator/(const vec3 &v, double t)

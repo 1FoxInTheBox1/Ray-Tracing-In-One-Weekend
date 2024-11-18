@@ -13,6 +13,7 @@ struct hit_record
 {
     point3 p;
     vec3 normal;
+    vec3 tangent;
     shared_ptr<material> mat;
     double t, u, v;
     bool front_face;

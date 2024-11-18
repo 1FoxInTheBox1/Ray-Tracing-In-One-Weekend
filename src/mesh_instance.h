@@ -3,6 +3,7 @@
 
 #include "hittable_list.h"
 #include "mesh.h"
+#include "matrix.h"
 
 // A representation of the collection of triangles that make up a mesh instance
 class mesh_instance : public hittable

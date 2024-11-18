@@ -40,6 +40,7 @@ bool sphere::hit(const ray &r, interval ray_t, hit_record &rec) const
     // Save details of the collision to the hit_record
     rec.t = root;
     rec.p = r.at(rec.t);
+    rec.tangent = unit_vector(cross(vec3(0, 1, 0), rec.p - center));
     vec3 outward_normal = (rec.p - center) / radius;
     rec.set_face_normal(r, outward_normal);
     rec.mat = mat;

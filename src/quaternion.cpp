@@ -31,6 +31,28 @@ quaternion quaternion::to_unit_quaternion()
     return quaternion(nx, ny, nz, ntheta);
 }
 
+vec3 quaternion::to_euler_angles()
+{
+    vec3 angles;
+
+    // roll (x-axis rotation)
+    double sinr_cosp = 2 * (e[3] * e[0] + e[1] * e[2]);
+    double cosr_cosp = 1 - 2 * (e[0] * e[0] + e[1] * e[1]);
+    angles[0] = std::atan2(sinr_cosp, cosr_cosp);
+
+    // pitch (y-axis rotation)
+    double sinp = std::sqrt(1 + 2 * (e[3] * e[1] - e[0] * e[2]));
+    double cosp = std::sqrt(1 - 2 * (e[3] * e[1] - e[0] * e[2]));
+    angles[1] = 2 * std::atan2(sinp, cosp) - M_PI / 2;
+
+    // yaw (z-axis rotation)
+    double siny_cosp = 2 * (e[3] * e[2] + e[0] * e[1]);
+    double cosy_cosp = 1 - 2 * (e[1] * e[1] + e[2] * e[2]);
+    angles[2] = std::atan2(siny_cosp, cosy_cosp);
+
+    return angles;
+}
+
 // TODO: Kept having multiple dependency errors here, so this got moved to vec3
 // Not really ideal, should try to fix this
 

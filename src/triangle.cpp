@@ -52,6 +52,7 @@ bool triangle::hit(const ray &ray, interval ray_t, hit_record &rec) const
 
     rec.t = t;
     rec.p = ray.at(rec.t);
+    rec.tangent = unit_vector(e1);
     rec.set_face_normal(ray, normal);
     rec.u = (1 - u - v) * tex_coord0.x() + u * tex_coord1.x() + v * tex_coord2.x();
     rec.v = (1 - u - v) * tex_coord0.y() + u * tex_coord1.y() + v * tex_coord2.y();

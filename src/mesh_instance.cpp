@@ -44,7 +44,7 @@ void mesh_instance::make_triangles(shared_ptr<mesh> mesh, point3 position, vec3 
     {
         vec3 new_vertex = vec3(vertex[0], vertex[1], vertex[2]);
         new_vertex *= scale;
-        new_vertex.rotate(rotation);
+        new_vertex = rotation_from_quaternion(rotation) * new_vertex;
         new_vertex += position;
         vertices.push_back(new_vertex);
     }

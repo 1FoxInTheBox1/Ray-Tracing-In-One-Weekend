@@ -23,6 +23,8 @@ target_sources(${PROJECT_NAME}
     src/metal_mat.cpp
     src/emissive_mat.h
     src/emissive_mat.cpp
+    src/universal_mat.h
+    src/universal_mat.cpp
     src/hittable_list.h
     src/hittable_list.cpp
     src/hittable.h

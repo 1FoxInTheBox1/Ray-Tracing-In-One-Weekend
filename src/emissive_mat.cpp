@@ -7,12 +7,6 @@ emissive::emissive(const char *filename) : texture(make_shared<image_texture>(fi
 bool emissive::scatter(const ray &r_in, const hit_record &rec,
                        color &attenuation, ray &scattered) const
 {
-    return false;
-}
-
-bool emissive::emit(
-    const ray &r_in, const hit_record &rec, color &attenuation, ray &emitted) const
-{
     auto scatter_direction = rec.normal + random_unit_vector();
 
     // Catch degenerate scatter directions
@@ -24,7 +18,13 @@ bool emissive::emit(
         scatter_direction = rec.normal;
     }
 
-    emitted = ray(rec.p, scatter_direction);
-    attenuation = texture->get_color_at(rec.u, rec.v);
+    scattered = ray(rec.p, scatter_direction);
+    attenuation = color(0, 0, 0);
+    return true;
+}
+
+bool emissive::emit(const hit_record &rec, color &emission) const
+{
+    emission = texture->get_color_at(rec.u, rec.v);
     return true;
 }

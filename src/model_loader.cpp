@@ -19,6 +19,10 @@ void load_file(const char *filename, vector<vec3> &vertices, vector<vec3> &tex_c
 void vertices_from_txt(const char *filename, std::vector<vec3> &vertices, std::vector<vec3> &tex_coords)
 {
     ifstream file(filename);
+    if (!file.good())
+    {
+        std::cout << "bad file " << filename;
+    }
     string fileOut;
     while (getline(file, fileOut))
     {

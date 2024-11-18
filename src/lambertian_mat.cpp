@@ -21,5 +21,6 @@ bool lambertian::scatter(const ray &r_in, const hit_record &rec,
 
     scattered = ray(rec.p, scatter_direction);
     attenuation = texture->get_color_at(rec.u, rec.v);
+    // attenuation = (rec.normal + vec3(0.0, 0.0, 1.0)) / 2;
     return true;
 }

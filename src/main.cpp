@@ -6,6 +6,7 @@
 #include "metal_mat.h"
 #include "dielectric_mat.h"
 #include "emissive_mat.h"
+#include "universal_mat.h"
 #include "bvh_node.h"
 #include "model_loader.h"
 #include "matrix.h"
@@ -20,6 +21,8 @@
 auto pot = make_shared<mesh>("data/teapot.obj");
 auto cube = make_shared<mesh>("data/cube.txt");
 auto plane = make_shared<mesh>("data/plane.txt");
+auto square = make_shared<mesh>("data/square.txt");
+auto mesh_sphere = make_shared<mesh>("data/sphere.txt");
 
 void add_test_mesh(double choose_mesh, point3 center, shared_ptr<material> mesh_material, hittable_list &world)
 {
@@ -86,6 +89,34 @@ void random_objects(hittable_list &world)
     }
 }
 
+void add_box(hittable_list &world)
+{
+    auto wall_mat = make_shared<lambertian>(color(0.5, 0.5, 0.5));
+    auto mirror_mat = make_shared<metal>(color(1.0, 1.0, 1.0), 0.01);
+    auto light_mat = make_shared<emissive>(color(3.0, 3.0, 3.0));
+
+    world.add(make_shared<triangle>(point3(2, -2, 2), point3(2, 2, 2), point3(2, 2, -2), wall_mat));
+    world.add(make_shared<triangle>(point3(2, -2, 2), point3(2, 2, -2), point3(2, -2, -2), wall_mat));
+
+    world.add(make_shared<triangle>(point3(-2, -2, 2), point3(-2, 2, 2), point3(-2, 2, -2), wall_mat));
+    world.add(make_shared<triangle>(point3(-2, -2, 2), point3(-2, 2, -2), point3(-2, -2, -2), wall_mat));
+
+    world.add(make_shared<triangle>(point3(2, -2, 2), point3(2, 2, 2), point3(-2, 2, 2), mirror_mat));
+    world.add(make_shared<triangle>(point3(2, -2, 2), point3(-2, 2, 2), point3(-2, -2, 2), mirror_mat));
+
+    world.add(make_shared<triangle>(point3(2, -2, -2), point3(2, 2, -2), point3(-2, 2, -2), mirror_mat));
+    world.add(make_shared<triangle>(point3(2, -2, -2), point3(-2, 2, -2), point3(-2, -2, -2), mirror_mat));
+
+    world.add(make_shared<triangle>(point3(2, -2, 2), point3(-2, -2, 2), point3(-2, -2, -2), wall_mat));
+    world.add(make_shared<triangle>(point3(2, -2, 2), point3(-2, -2, -2), point3(2, -2, -2), wall_mat));
+
+    world.add(make_shared<triangle>(point3(2, 2, 2), point3(-2, 2, 2), point3(-2, 2, -2), wall_mat));
+    world.add(make_shared<triangle>(point3(2, 2, 2), point3(-2, 2, -2), point3(2, 2, -2), wall_mat));
+
+    world.add(make_shared<triangle>(point3(.3, .299, .3), point3(-.3, .299, .3), point3(-.3, .299, -.3), light_mat));
+    world.add(make_shared<triangle>(point3(.3, .299, .3), point3(-.3, .299, -.3), point3(.3, .299, -.3), light_mat));
+}
+
 void build_bvh(shared_ptr<bvh_node> &root, const hittable_list &world, int max_depth)
 {
     for (int i = 0; i < world.size(); i++)
@@ -105,10 +136,12 @@ void build_scene(hittable_list &world)
     auto material4 = make_shared<lambertian>(color(0.5, 0.5, 0.5));
     auto material5 = make_shared<lambertian>(color(1.0, 0.0, 1.0));
     auto material6 = make_shared<emissive>(color(4.0, 0.0, 0.0));
-    auto material7 = make_shared<metal>(color(1.0, 1.0, 1.0), 0.01);
-    auto material8 = make_shared<emissive>(color(2.0, 2.0, 2.0));
-    auto material9 = make_shared<lambertian>(color(1.0, 1.0, 1.0));
-    auto material10 = make_shared<lambertian>("images/mark.png");
+    auto material7 = make_shared<metal>(color(0.6, 0.6, 0.6), 1.0);
+    auto material8 = make_shared<emissive>(color(100.0, 100.0, 100.0));
+    auto material9 = make_shared<lambertian>(color(0.0, 1.0, 1.0));
+    auto material10 = make_shared<lambertian>("images/circuit/circuitry_albedo.png");
+    auto pbr_mat = make_shared<universal>("images/circuit/circuitry_albedo.png", "images/circuit/circuitry_normals.png",
+                                          "images/circuit/circuitry_metallic.png", "images/circuit/circuitry_emission.png", 10);
 
     // auto pot_instance = make_shared<mesh_instance>(pot, point3(4, .5, 0), vec3(.5, .5, .5), quaternion(0, 0, 0), material1);
     // auto cube_instance = make_shared<mesh_instance>(cube, point3(-4, 1, 0), vec3(.5, 2, .5), quaternion(0, 0, 0), material3);
@@ -119,36 +152,27 @@ void build_scene(hittable_list &world)
     // cube_instance->add_to_list(world);
     // plane_instance->add_to_list(world);
 
-    world.add(make_shared<triangle>(point3(2, -2, 2), point3(2, 2, 2), point3(2, 2, -2), material4));
-    world.add(make_shared<triangle>(point3(2, -2, 2), point3(2, 2, -2), point3(2, -2, -2), material4));
 
-    world.add(make_shared<triangle>(point3(-2, -2, 2), point3(-2, 2, 2), point3(-2, 2, -2), material4));
-    world.add(make_shared<triangle>(point3(-2, -2, 2), point3(-2, 2, -2), point3(-2, -2, -2), material4));
+    auto plane_instance = make_shared<mesh_instance>(square, point3(-5, -0.5, -5), vec3(10, 10, 10), quaternion(pi/2, 0, 0), material4);
+    // auto light1 = make_shared<mesh_instance>(square, point3(-1, 0, -2), vec3(2.0, 1.0, 1.0), quaternion(0, 0, 0), material8);
+    // auto light2 = make_shared<mesh_instance>(square, point3(-1, 0, 2), vec3(2.0, 1.0, 1.0), quaternion(0, 0, 0), material8);
 
-    world.add(make_shared<triangle>(point3(2, -2, 2), point3(2, 2, 2), point3(-2, 2, 2), material7));
-    world.add(make_shared<triangle>(point3(2, -2, 2), point3(-2, 2, 2), point3(-2, -2, 2), material7));
+    world.add(make_shared<sphere>(point3(.55, 0, 0), 0.5, pbr_mat));
+    world.add(make_shared<sphere>(point3(-.55, 0, 0), 0.5, material4));
+    // world.add(make_shared<sphere>(point3(-.55, 0, 0), 0.5, material7));
+    // world.add(make_shared<sphere>(point3(-.55, 0, 0), 0.5, material7));
 
-    world.add(make_shared<triangle>(point3(2, -2, -2), point3(2, 2, -2), point3(-2, 2, -2), material7));
-    world.add(make_shared<triangle>(point3(2, -2, -2), point3(-2, 2, -2), point3(-2, -2, -2), material7));
+    // auto cube_instance = make_shared<mesh_instance>(cube, point3(-.55, 0, 0), vec3(.5, .5, .5), quaternion(0, 0, 0), pbr_mat);
+    // cube_instance->add_to_list(world);
+    // auto sphere_instance = make_shared<mesh_instance>(mesh_sphere, point3(-.55, 0, 0), vec3(.5, .5, .5), quaternion(0, 0, 0), pbr_mat);
+    // sphere_instance->add_to_list(world);
 
-    world.add(make_shared<triangle>(point3(2, -2, 2), point3(-2, -2, 2), point3(-2, -2, -2), material4));
-    world.add(make_shared<triangle>(point3(2, -2, 2), point3(-2, -2, -2), point3(2, -2, -2), material4));
-
-    world.add(make_shared<triangle>(point3(2, 2, 2), point3(-2, 2, 2), point3(-2, 2, -2), material4));
-    world.add(make_shared<triangle>(point3(2, 2, 2), point3(-2, 2, -2), point3(2, 2, -2), material4));
-
-    world.add(make_shared<triangle>(point3(.3, .299, .3), point3(-.3, .299, .3), point3(-.3, .299, -.3), material8));
-    world.add(make_shared<triangle>(point3(.3, .299, .3), point3(-.3, .299, -.3), point3(.3, .299, -.3), material8));
-
-    world.add(make_shared<sphere>(point3(-1, 0, 0), 0.25, material6));
-    world.add(make_shared<sphere>(point3(1.4, 0, 0), 0.3, material2));
-    auto pot_instance = make_shared<mesh_instance>(pot, point3(0, -1, 0), vec3(.2, .2, .2), quaternion(0, 0, 0), material9);
-    auto cube_instance = make_shared<mesh_instance>(cube, point3(-.4, 1, 0), vec3(.2, .2, .2), quaternion(30, 30, 30), material10);
-    pot_instance->add_to_list(world);
-    cube_instance->add_to_list(world);
+    plane_instance->add_to_list(world);
+    // light1->add_to_list(world);
+    // light2->add_to_list(world);
 }
 
-    // random_objects(world);
+// random_objects(world);
 
 int main()
 {
@@ -176,14 +200,14 @@ int main()
 
     // Camera Setup
     camera cam;
-    cam.aspect_ratio = 1.0;
-    cam.image_width = 600;
-    cam.samples_per_pixel = 200;
+    cam.aspect_ratio = 16.0 / 9.0;
+    cam.image_width = 800;
+    cam.samples_per_pixel = 50;
     cam.max_depth = 50;
 
     // Camera Aiming
-    cam.vfov = 90;
-    cam.lookfrom = point3(0, 0, -1.99);
+    cam.vfov = 40;
+    cam.lookfrom = point3(0, 0, -2.5);
     cam.lookat = point3(0, 0, 0);
     cam.vup = vec3(0, 1, 0);
 

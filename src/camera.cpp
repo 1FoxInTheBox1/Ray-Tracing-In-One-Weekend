@@ -169,13 +169,21 @@ color camera::ray_color(const ray &r, int depth, const hittable &world) const
         ray scattered;
         ray emitted;
         color attenuation;
+        color emission;
 
         // If scatter() returns true then the ray was not absorbed
         if (rec.mat->scatter(r, rec, attenuation, scattered))
+        {
             // We recursively determine the color of the scattered ray to determine the color of this ray
-            return attenuation * ray_color(scattered, depth - 1, world);
-        if (rec.mat->emit(r, rec, attenuation, emitted))
-            return attenuation;
+            color final_color = attenuation * ray_color(scattered, depth - 1, world);
+            if (rec.mat->emit(rec, emission))
+            {
+                final_color += emission;
+            }
+            return final_color;
+        }
+        // if (rec.mat->emit(r, rec, attenuation, emitted))
+        //     return attenuation;
         // An absorbed ray obviously won't produce any color, so we return black
         return color(0, 0, 0);
     }

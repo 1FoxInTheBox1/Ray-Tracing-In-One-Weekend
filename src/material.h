@@ -15,8 +15,7 @@ public:
     virtual bool scatter(
         const ray &r_in, const hit_record &rec, color &attenuation, ray &scattered) const = 0;
 
-    virtual bool emit(
-        const ray &r_in, const hit_record &rec, color &attenuation, ray &emitted) const
+    virtual bool emit(const hit_record &rec, color &emission) const
     {
         return false;
     }

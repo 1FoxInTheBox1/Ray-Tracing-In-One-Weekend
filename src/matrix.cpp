@@ -1,9 +1,31 @@
 #include "matrix.h"
 
 matrix::matrix() {}
+matrix::matrix(vec3 row1, vec3 row2, vec3 row3)
+{
+    data[0][0] = row1[0];
+    data[0][1] = row1[1];
+    data[0][2] = row1[2];
+    data[0][3] = 0;
+
+    data[1][0] = row2[0];
+    data[1][1] = row2[1];
+    data[1][2] = row2[2];
+    data[1][3] = 0;
+
+    data[2][0] = row3[0];
+    data[2][1] = row3[1];
+    data[2][2] = row3[2];
+    data[2][3] = 0;
+
+    data[3][0] = 0;
+    data[3][1] = 0;
+    data[3][2] = 0;
+    data[3][3] = 1;
+}
 
 // Creates a rotation matrix from the quaternion (x, y, z, w)
-matrix matrix::rotation_from_quaternion(double x, double y, double z, double w)
+matrix rotation_from_quaternion(double x, double y, double z, double w)
 {
     double nx = x;
     double ny = y;
@@ -36,7 +58,7 @@ matrix matrix::rotation_from_quaternion(double x, double y, double z, double w)
     return m;
 }
 
-matrix matrix::rotation_from_quaternion(quaternion q)
+matrix rotation_from_quaternion(quaternion q)
 {
     return rotation_from_quaternion(q[0], q[1], q[2], q[3]);
 }
